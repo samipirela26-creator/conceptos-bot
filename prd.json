@@ -36,14 +36,14 @@
       "priority": 5,
       "title": "Favoritos con SQLite",
       "description": "Crear src/db.py (siguiendo el patrón de gastos-bot/db.py) con una tabla favoritos (user_id, palabra, fecha). Agregar comando /favoritos para listar, y un botón o comando para guardar/quitar la última palabra consultada.",
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-006",
       "priority": 6,
       "title": "Historial de búsquedas",
       "description": "Usando la misma base SQLite de US-005, registrar cada búsqueda exitosa (user_id, palabra, fecha) y agregar comando /historial que muestre las últimas 10 palabras consultadas por ese usuario.",
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-007",

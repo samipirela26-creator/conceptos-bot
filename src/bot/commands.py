@@ -31,3 +31,65 @@ async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         await query.message.reply_text(texts.AYUDA)
     elif accion == "acerca":
         await query.message.reply_text(texts.ACERCA_DE)
+
+
+def _favoritos_keyboard(favoritos: list[str]) -> InlineKeyboardMarkup:
+    filas = [
+        [InlineKeyboardButton(f"🗑 Quitar \"{palabra}\"", callback_data=f"francis_fav:quitar:{palabra}")]
+        for palabra in favoritos
+    ]
+    return InlineKeyboardMarkup(filas)
+
+
+async def favoritos_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    db = context.bot_data.get("db")
+    favoritos = db.listar_favoritos(update.effective_user.id) if db is not None else []
+    if not favoritos:
+        await update.message.reply_text(
+            "🦉 Aún no tiene palabras guardadas en sus favoritos. Cuando le "
+            "sirva una definición, use el botón \"⭐ Guardar en favoritos\"."
+        )
+        return
+    lista = "\n".join(f"• {palabra}" for palabra in favoritos)
+    await update.message.reply_text(
+        f"🦉 Sus palabras favoritas:\n\n{lista}",
+        reply_markup=_favoritos_keyboard(favoritos),
+    )
+
+
+async def historial_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    db = context.bot_data.get("db")
+    historial = db.listar_historial(update.effective_user.id) if db is not None else []
+    if not historial:
+        await update.message.reply_text("🦉 Todavía no hemos conversado sobre ninguna palabra.")
+        return
+    lista = "\n".join(f"• {palabra}" for palabra in historial)
+    await update.message.reply_text(f"🦉 Sus últimas palabras consultadas:\n\n{lista}")
+
+
+async def favorito_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    db = context.bot_data.get("db")
+    if db is None:
+        return
+
+    _, accion, palabra = (query.data or "").split(":", 2)
+    user_id = update.effective_user.id
+
+    if accion == "add":
+        db.agregar_favorito(user_id, palabra)
+        await query.edit_message_reply_markup(reply_markup=None)
+        await query.message.reply_text(f"🦉 Guardado \"{palabra}\" en sus favoritos. ⭐")
+    elif accion == "quitar":
+        db.quitar_favorito(user_id, palabra)
+        favoritos = db.listar_favoritos(user_id)
+        if favoritos:
+            await query.edit_message_text(
+                "🦉 Sus palabras favoritas:\n\n" + "\n".join(f"• {p}" for p in favoritos),
+                reply_markup=_favoritos_keyboard(favoritos),
+            )
+        else:
+            await query.edit_message_text(
+                "🦉 Ya no le quedan palabras guardadas en sus favoritos."
+            )

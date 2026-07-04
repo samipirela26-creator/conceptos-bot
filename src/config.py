@@ -21,6 +21,8 @@ class Config:
         self.log_level = os.getenv('LOG_LEVEL', 'INFO')
         self.log_dir = os.getenv('LOG_DIR', 'logs')
 
+        self.db_path = os.getenv('DB_PATH', 'conceptos.db')
+
     def _get_required_env(self, key: str) -> str:
         value = os.getenv(key)
         if not value:

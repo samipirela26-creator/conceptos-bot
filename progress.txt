@@ -63,3 +63,22 @@
   - Por velocidad (las inline queries de Telegram tienen un límite de tiempo corto, ~10s), inline_query_handler NO usa Gemini -- solo extraer_heuristico(consulta), y si no matchea ningún patrón, usa la consulta tal cual como concepto. Esto es intencional y diferente del flujo normal de handle_message.
   - _buscar_concepto() en src/bot/handlers.py es ahora el punto único para las llamadas a RAE/Wikcionario con manejo de errores -- si se agrega otra vía de entrada (ej. comando manual, palabra del día), reutilizar esta función en vez de duplicar los try/except.
 ---
+
+## [2026-07-04 00:05] - US-005 y US-006
+- Implementados juntos (comparten la misma base SQLite): favoritos e historial de búsquedas por usuario.
+- Archivos cambiados:
+  - src/db.py (nuevo): DBClient liviano (sin mixins -- solo dos tablas simples, no se justifica la arquitectura de mixins de gastos-bot/db.py que es para un dominio financiero mucho más grande). Tablas `favoritos` (PK compuesta user_id+palabra) e `historial` (con id autoincrement, usado como desempate de orden en vez de fecha porque datetime('now') de SQLite solo tiene resolución de segundo). Métodos: agregar_favorito, quitar_favorito, es_favorito, listar_favoritos, registrar_historial, listar_historial(limite=10).
+  - src/config.py: agregado Config.db_path (env DB_PATH, default "conceptos.db").
+  - src/main.py: se instancia DBClient(config.db_path) y se guarda en application.bot_data["db"]; registrados CommandHandler("favoritos", ...), CommandHandler("historial", ...) y CallbackQueryHandler(favorito_callback, pattern=r"^francis_fav:").
+  - src/bot/commands.py: favoritos_command, historial_command, favorito_callback (namespace de callback_data "francis_fav:add:<palabra>" / "francis_fav:quitar:<palabra>"), _favoritos_keyboard() con un botón "quitar" por favorito.
+  - src/bot/handlers.py: handle_message ahora registra cada búsqueda exitosa en el historial y adjunta un botón "⭐ Guardar en favoritos" al mensaje de resultado (solo si el concepto todavía no es favorito, y solo si cabe en el límite de 40 bytes de callback_data).
+  - .gitignore: agregado "*.db" (el archivo SQLite es dato de usuario, no se versiona -- igual que .env).
+  - .env.example: agregada variable DB_PATH documentada.
+  - tests/test_db.py (nuevo), tests/test_commands.py y tests/test_handlers.py extendidos.
+- Verificación: `.venv/bin/python -m pytest -q` -> 44 passed. `python -c "import src.main"` para confirmar el arranque con el DBClient real.
+- **Learnings for future iterations:**
+  - Para conceptos-bot NO se replicó el patrón de mixins de gastos-bot/db.py -- ese patrón es para ~7 dominios de datos financieros con mucha lógica cada uno. Con dos tablas simples (favoritos, historial), una sola clase plana en src/db.py es más clara y evita abstracción prematura. Si en el futuro se agregan muchas más tablas/dominios, ahí sí valdría la pena revisar si conviene dividir en mixins.
+  - `historial` usa un `id INTEGER PRIMARY KEY AUTOINCREMENT` como criterio de orden real (MAX(id) en vez de MAX(fecha)) -- si solo se usara `fecha` (texto con resolución de segundo), inserciones rápidas en el mismo segundo (ej. en tests, o un usuario reconsultando la misma palabra dos veces seguidas) producirían empates y un orden no determinista.
+  - Todas las consultas a favoritos/historial normalizan la palabra a minúsculas (palabra.lower()) antes de guardar/leer, para que "Casa" y "casa" cuenten como el mismo favorito.
+  - El botón de favorito en el resultado de handle_message se omite si `len(concepto.encode("utf-8")) > 40`, porque el callback_data completo (con el prefijo "francis_fav:add:") no puede superar el límite de 64 bytes que impone la Bot API de Telegram.
+---

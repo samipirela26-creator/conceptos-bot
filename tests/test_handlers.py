@@ -1,7 +1,8 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from src.bot.handlers import inline_query_handler
+from src.bot.handlers import handle_message, inline_query_handler
+from src.db import DBClient
 
 RESULTADO_RAE_CASA = {
     "palabra": "casa",
@@ -42,3 +43,41 @@ async def test_inline_query_no_encontrada_no_responde():
          patch("src.bot.handlers.buscar_wikcionario", return_value=None):
         await inline_query_handler(update, MagicMock())
     update.inline_query.answer.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_handle_message_registra_historial_y_ofrece_favorito():
+    db = DBClient(":memory:")
+    update = MagicMock()
+    update.effective_user.id = 1
+    update.message.text = "casa"
+    update.message.reply_text = AsyncMock()
+    context = MagicMock()
+    context.bot_data = {"allowed_user_ids": [], "db": db}
+
+    with patch("src.bot.handlers.buscar_rae", return_value=RESULTADO_RAE_CASA), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=None):
+        await handle_message(update, context)
+
+    assert db.listar_historial(1) == ["casa"]
+    ultima_llamada = update.message.reply_text.call_args
+    assert ultima_llamada.kwargs["reply_markup"] is not None
+
+
+@pytest.mark.asyncio
+async def test_handle_message_no_ofrece_favorito_si_ya_lo_es():
+    db = DBClient(":memory:")
+    db.agregar_favorito(1, "casa")
+    update = MagicMock()
+    update.effective_user.id = 1
+    update.message.text = "casa"
+    update.message.reply_text = AsyncMock()
+    context = MagicMock()
+    context.bot_data = {"allowed_user_ids": [], "db": db}
+
+    with patch("src.bot.handlers.buscar_rae", return_value=RESULTADO_RAE_CASA), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=None):
+        await handle_message(update, context)
+
+    ultima_llamada = update.message.reply_text.call_args
+    assert ultima_llamada.kwargs["reply_markup"] is None

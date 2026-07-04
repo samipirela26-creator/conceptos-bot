@@ -3,7 +3,10 @@ el usuario (heurística, y si hace falta, Gemini SOLO para esto) 2) consultar
 RAE + Wikcionario (fuentes reales, nunca generadas) 3) formatear y responder."""
 import logging
 
-from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
+from telegram import (
+    InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle,
+    InputTextMessageContent, Update,
+)
 from telegram.ext import ContextTypes
 
 from src.bot import texts
@@ -72,8 +75,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             await update.message.reply_text(texts.no_encontrado(concepto))
         return
 
+    db = context.bot_data.get("db")
+    user_id = update.effective_user.id
+    if db is not None:
+        db.registrar_historial(user_id, concepto)
+        ya_es_favorito = db.es_favorito(user_id, concepto)
+    else:
+        ya_es_favorito = False
+
     mensaje_final = formatear_resultado(concepto, resultado_rae, resultado_wikcionario)
-    await update.message.reply_text(mensaje_final, parse_mode="Markdown")
+    teclado = None
+    # callback_data de Telegram tiene un límite de 64 bytes; "francis_fav:add:"
+    # ya ocupa 17, así que se omite el botón para conceptos inusualmente largos.
+    if db is not None and not ya_es_favorito and len(concepto.encode("utf-8")) <= 40:
+        teclado = InlineKeyboardMarkup([[
+            InlineKeyboardButton("⭐ Guardar en favoritos", callback_data=f"francis_fav:add:{concepto}"),
+        ]])
+    await update.message.reply_text(mensaje_final, parse_mode="Markdown", reply_markup=teclado)
 
 
 async def inline_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
