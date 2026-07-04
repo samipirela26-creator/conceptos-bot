@@ -1,7 +1,8 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
-from src.bot.handlers import handle_message, inline_query_handler
+from src.bot import texts
+from src.bot.handlers import handle_message, inline_query_handler, buscar_palabra_del_dia
 from src.db import DBClient
 
 RESULTADO_RAE_CASA = {
@@ -81,3 +82,19 @@ async def test_handle_message_no_ofrece_favorito_si_ya_lo_es():
 
     ultima_llamada = update.message.reply_text.call_args
     assert ultima_llamada.kwargs["reply_markup"] is None
+
+
+def test_buscar_palabra_del_dia_devuelve_concepto_y_resultado():
+    with patch("src.bot.handlers.buscar_rae", return_value=RESULTADO_RAE_CASA), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=None):
+        encontrada = buscar_palabra_del_dia()
+    assert encontrada is not None
+    concepto, resultado_rae, resultado_wikcionario = encontrada
+    assert concepto in texts.PALABRAS_DEL_DIA
+    assert resultado_rae == RESULTADO_RAE_CASA
+
+
+def test_buscar_palabra_del_dia_ninguna_encontrada_devuelve_none():
+    with patch("src.bot.handlers.buscar_rae", return_value=None), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=None):
+        assert buscar_palabra_del_dia() is None

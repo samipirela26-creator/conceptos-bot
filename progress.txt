@@ -82,3 +82,22 @@
   - Todas las consultas a favoritos/historial normalizan la palabra a minúsculas (palabra.lower()) antes de guardar/leer, para que "Casa" y "casa" cuenten como el mismo favorito.
   - El botón de favorito en el resultado de handle_message se omite si `len(concepto.encode("utf-8")) > 40`, porque el callback_data completo (con el prefijo "francis_fav:add:") no puede superar el límite de 64 bytes que impone la Bot API de Telegram.
 ---
+
+## [2026-07-04 00:15] - US-007
+- Implementada la "palabra del día": envío diario automático vía JobQueue más un comando manual /palabradeldia.
+- Archivos cambiados:
+  - src/bot/texts.py: agregada PALABRAS_DEL_DIA (lista curada de ~33 palabras candidatas reales, ej. "serendipia", "efímero", "melancolía" -- solo son candidatas a buscarse, su definición sigue saliendo de RAE/Wikcionario) y PALABRA_DEL_DIA_INTRO.
+  - src/bot/handlers.py: agregado buscar_palabra_del_dia() que elige una palabra al azar (random.sample sobre toda la lista, sin repetición) y reintenta con otra candidata si la elegida no aparece en ninguna fuente, reutilizando _buscar_concepto() ya existente; devuelve None solo si ninguna candidata dio resultado.
+  - src/bot/commands.py: nuevo palabra_del_dia_command() (comando manual, mismo formato que el envío automático).
+  - src/db.py: nueva tabla `usuarios` (user_id PRIMARY KEY) + métodos registrar_usuario()/listar_usuarios(), para saber a quién mandarle la palabra del día cuando ALLOWED_USER_IDS está vacío (registro abierto). Se llama a db.registrar_usuario() desde start_command() y desde el inicio de handle_message().
+  - src/main.py: nueva función enviar_palabra_del_dia(context) (job diario -- destinatarios = ALLOWED_USER_IDS si está configurado, si no todos los usuarios conocidos en la tabla `usuarios`); registrados CommandHandler("palabradeldia", ...) y application.job_queue.run_daily(enviar_palabra_del_dia, time=8:00 AM, days=todos), guardado con `if application.job_queue is not None` (igual patrón que gastos-bot); "palabradeldia" agregado a COMANDOS_PUBLICOS.
+  - requirements.txt: python-telegram-bot cambiado a extra [job-queue] (trae APScheduler, necesario para que application.job_queue no sea None).
+  - tests/test_handlers.py: tests de buscar_palabra_del_dia (encontrada / ninguna candidata con resultado).
+  - tests/test_commands.py: tests de palabra_del_dia_command (encontrada / sin resultado -> ERROR_SERVICIO).
+  - tests/test_main.py (nuevo): tests de enviar_palabra_del_dia (usa ALLOWED_USER_IDS si está configurado, usa usuarios registrados si no, no busca ni envía si no hay destinatarios, no envía si buscar_palabra_del_dia() devuelve None).
+- Verificación: `.venv/bin/python -m pytest -q` -> 52 passed. `python -c "import src.main"` para confirmar el arranque con el job registrado. Proceso en vivo reiniciado con el procedimiento seguro habitual (pgrep -> SIGTERM a wrapper e hijo -> confirmar cero instancias -> nueva instancia -> logs limpios).
+- **Learnings for future iterations:**
+  - `application.job_queue` requiere el extra `[job-queue]` de python-telegram-bot (APScheduler) instalado -- si no, `application.job_queue` es None y hay que loguear una advertencia en vez de fallar, igual que gastos-bot.
+  - El `logger` global de src/main.py es None hasta que main() lo inicializa -- en tests que ejercitan enviar_palabra_del_dia() por la rama de "no se encontró ninguna palabra" (que llama a logger.warning), hay que parchear src.main.logger con un MagicMock, si no truena con AttributeError.
+  - La tabla `usuarios` es la fuente de destinatarios cuando ALLOWED_USER_IDS está vacío (registro abierto) -- cualquier handler nuevo que reciba usuarios por primera vez (comandos, mensajes) debería llamar a db.registrar_usuario(user_id) igual que ya hacen start_command() y handle_message().
+---

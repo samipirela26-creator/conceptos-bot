@@ -2,6 +2,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
 from src.bot import texts
+from src.bot.formatters import formatear_resultado
+from src.bot.handlers import buscar_palabra_del_dia
 
 
 def _menu_keyboard() -> InlineKeyboardMarkup:
@@ -12,6 +14,9 @@ def _menu_keyboard() -> InlineKeyboardMarkup:
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    db = context.bot_data.get("db")
+    if db is not None:
+        db.registrar_usuario(update.effective_user.id)
     await update.message.reply_text(texts.BIENVENIDA)
 
 
@@ -93,3 +98,15 @@ async def favorito_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             await query.edit_message_text(
                 "🦉 Ya no le quedan palabras guardadas en sus favoritos."
             )
+
+
+async def palabra_del_dia_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    encontrada = buscar_palabra_del_dia()
+    if encontrada is None:
+        await update.message.reply_text(texts.ERROR_SERVICIO)
+        return
+    concepto, resultado_rae, resultado_wikcionario = encontrada
+    mensaje = formatear_resultado(concepto, resultado_rae, resultado_wikcionario)
+    await update.message.reply_text(
+        f"{texts.PALABRA_DEL_DIA_INTRO}\n\n{mensaje}", parse_mode="Markdown"
+    )

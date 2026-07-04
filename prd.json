@@ -50,7 +50,7 @@
       "priority": 7,
       "title": "Palabra del día",
       "description": "Agregar un JobQueue diario (mirroring el patrón usado en asistente-bot) que elija una palabra interesante y la envíe automáticamente a los usuarios autorizados, más un comando manual /palabradeldia para pedirla en cualquier momento.",
-      "passes": false
+      "passes": true
     }
   ]
 }

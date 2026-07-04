@@ -26,6 +26,11 @@ class DBClient:
                 fecha TEXT NOT NULL DEFAULT (datetime('now'))
             )
         """)
+        self._conn.execute("""
+            CREATE TABLE IF NOT EXISTS usuarios (
+                user_id INTEGER PRIMARY KEY
+            )
+        """)
         self._conn.commit()
         logger.info(f"Base de datos SQLite lista en: {db_path}")
 
@@ -81,4 +86,17 @@ class DBClient:
             "WHERE user_id = ? GROUP BY palabra ORDER BY ultimo_id DESC LIMIT ?",
             (user_id, limite),
         )
+        return [fila[0] for fila in cursor.fetchall()]
+
+    def registrar_usuario(self, user_id: int) -> None:
+        """Registra que este user_id ya interactuó con el bot -- se usa para
+        saber a quién enviarle la 'palabra del día' cuando el registro es
+        abierto (ALLOWED_USER_IDS vacío) y no hay una lista fija de destinatarios."""
+        self._conn.execute(
+            "INSERT OR IGNORE INTO usuarios (user_id) VALUES (?)", (user_id,)
+        )
+        self._conn.commit()
+
+    def listar_usuarios(self) -> list[int]:
+        cursor = self._conn.execute("SELECT user_id FROM usuarios")
         return [fila[0] for fila in cursor.fetchall()]

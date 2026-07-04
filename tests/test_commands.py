@@ -1,11 +1,18 @@
 import pytest
-from unittest.mock import AsyncMock, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from src.bot.commands import (
     menu_command, menu_callback, favoritos_command, historial_command, favorito_callback,
+    palabra_del_dia_command,
 )
 from src.bot import texts
 from src.db import DBClient
+
+RESULTADO_RAE_CASA = {
+    "palabra": "casa",
+    "etimologia": None,
+    "acepciones": [{"texto": "Edificio para habitar", "etiqueta": "f.", "ejemplos": [], "sinonimos": []}],
+}
 
 
 @pytest.mark.asyncio
@@ -101,3 +108,23 @@ async def test_favorito_callback_quitar():
     await favorito_callback(update, _context_con_db(db))
     assert db.es_favorito(1, "casa") is False
     update.callback_query.edit_message_text.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_palabra_del_dia_command_encontrada():
+    update = MagicMock()
+    update.message.reply_text = AsyncMock()
+    with patch("src.bot.commands.buscar_palabra_del_dia", return_value=("casa", RESULTADO_RAE_CASA, None)):
+        await palabra_del_dia_command(update, MagicMock())
+    mensaje = update.message.reply_text.call_args.args[0]
+    assert texts.PALABRA_DEL_DIA_INTRO in mensaje
+    assert "casa" in mensaje.lower()
+
+
+@pytest.mark.asyncio
+async def test_palabra_del_dia_command_sin_resultado():
+    update = MagicMock()
+    update.message.reply_text = AsyncMock()
+    with patch("src.bot.commands.buscar_palabra_del_dia", return_value=None):
+        await palabra_del_dia_command(update, MagicMock())
+    update.message.reply_text.assert_awaited_once_with(texts.ERROR_SERVICIO)

@@ -1,4 +1,5 @@
 """Entry point del bot de Telegram 'Francis la Búho'."""
+import datetime as dt
 import sys
 from telegram import BotCommand
 from telegram.ext import (
@@ -10,11 +11,14 @@ from src.config import Config
 from src.db import DBClient
 from src.utils.logger import setup_logger
 from src.llm.gemini_client import GeminiClient
+from src.bot import texts
+from src.bot.formatters import formatear_resultado
 from src.bot.commands import (
     start_command, help_command, menu_command, menu_callback,
     favoritos_command, historial_command, favorito_callback,
+    palabra_del_dia_command,
 )
-from src.bot.handlers import handle_message, error_handler, inline_query_handler
+from src.bot.handlers import handle_message, error_handler, inline_query_handler, buscar_palabra_del_dia
 
 logger = None
 
@@ -24,12 +28,38 @@ COMANDOS_PUBLICOS = [
     BotCommand("menu", "Ver menú con botones"),
     BotCommand("favoritos", "Ver sus palabras favoritas"),
     BotCommand("historial", "Ver sus últimas búsquedas"),
+    BotCommand("palabradeldia", "Recibir una palabra del día"),
 ]
 
 
 async def _post_init(application) -> None:
     await application.bot.set_my_commands(COMANDOS_PUBLICOS)
     logger.info("Menú de comandos (☰) registrado en Telegram.")
+
+
+async def enviar_palabra_del_dia(context) -> None:
+    """Job diario: le manda la palabra del día a cada usuario conocido (o a
+    los ALLOWED_USER_IDS fijos, si el bot los tiene configurados)."""
+    db: DBClient = context.bot_data["db"]
+    allowed_user_ids = context.bot_data.get("allowed_user_ids") or []
+    destinatarios = allowed_user_ids if allowed_user_ids else db.listar_usuarios()
+    if not destinatarios:
+        return
+
+    encontrada = buscar_palabra_del_dia()
+    if encontrada is None:
+        logger.warning("No se encontró ninguna palabra del día disponible hoy.")
+        return
+
+    concepto, resultado_rae, resultado_wikcionario = encontrada
+    mensaje = formatear_resultado(concepto, resultado_rae, resultado_wikcionario)
+    texto = f"{texts.PALABRA_DEL_DIA_INTRO}\n\n{mensaje}"
+
+    for user_id in destinatarios:
+        try:
+            await context.bot.send_message(chat_id=user_id, text=texto, parse_mode="Markdown")
+        except Exception as e:
+            logger.error(f"No se pudo enviar la palabra del día a {user_id}: {e}")
 
 
 def main():
@@ -56,11 +86,26 @@ def main():
         application.add_handler(CommandHandler("menu", menu_command))
         application.add_handler(CommandHandler("favoritos", favoritos_command))
         application.add_handler(CommandHandler("historial", historial_command))
+        application.add_handler(CommandHandler("palabradeldia", palabra_del_dia_command))
         application.add_handler(CallbackQueryHandler(menu_callback, pattern=r"^francis_menu:"))
         application.add_handler(CallbackQueryHandler(favorito_callback, pattern=r"^francis_fav:"))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
         application.add_handler(InlineQueryHandler(inline_query_handler))
         application.add_error_handler(error_handler)
+
+        if application.job_queue is not None:
+            application.job_queue.run_daily(
+                enviar_palabra_del_dia,
+                time=dt.time(hour=8, minute=0),
+                days=(0, 1, 2, 3, 4, 5, 6),
+                name="palabra_del_dia",
+            )
+            logger.info("Job de palabra del día (8:00 AM) programado.")
+        else:
+            logger.warning(
+                "JobQueue no disponible (¿falta instalar python-telegram-bot[job-queue]?). "
+                "La palabra del día automática no se activará."
+            )
 
         if config.allowed_user_ids:
             logger.info(f"Acceso restringido a user_ids: {config.allowed_user_ids}")

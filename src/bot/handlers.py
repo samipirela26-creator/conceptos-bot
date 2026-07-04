@@ -2,6 +2,7 @@
 el usuario (heurística, y si hace falta, Gemini SOLO para esto) 2) consultar
 RAE + Wikcionario (fuentes reales, nunca generadas) 3) formatear y responder."""
 import logging
+import random
 
 from telegram import (
     InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle,
@@ -44,10 +45,26 @@ def _buscar_concepto(concepto: str) -> tuple[dict | None, dict | None, bool]:
     return resultado_rae, resultado_wikcionario, hubo_error_servicio
 
 
+def buscar_palabra_del_dia() -> tuple[str, dict | None, dict | None] | None:
+    """Elige una palabra al azar de texts.PALABRAS_DEL_DIA y la busca en
+    RAE/Wikcionario, reintentando con otra palabra si alguna no aparece en
+    ninguna fuente. Devuelve None si ninguna de las candidatas dio resultado."""
+    candidatas = random.sample(texts.PALABRAS_DEL_DIA, k=len(texts.PALABRAS_DEL_DIA))
+    for concepto in candidatas:
+        resultado_rae, resultado_wikcionario, _ = _buscar_concepto(concepto)
+        if resultado_rae or resultado_wikcionario:
+            return concepto, resultado_rae, resultado_wikcionario
+    return None
+
+
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     allowed_user_ids = context.bot_data.get("allowed_user_ids") or []
     if not _acceso_permitido(update.effective_user.id, allowed_user_ids):
         return
+
+    db = context.bot_data.get("db")
+    if db is not None:
+        db.registrar_usuario(update.effective_user.id)
 
     mensaje = update.message.text
     concepto = extraer_heuristico(mensaje)
@@ -75,7 +92,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             await update.message.reply_text(texts.no_encontrado(concepto))
         return
 
-    db = context.bot_data.get("db")
     user_id = update.effective_user.id
     if db is not None:
         db.registrar_historial(user_id, concepto)

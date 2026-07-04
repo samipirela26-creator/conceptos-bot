@@ -85,6 +85,22 @@ TOQUE_DE_FE = [
     "\n\n_Bendito sea Dios, dador de todo buen entendimiento._ 🙏",
 ]
 
+# Palabras curadas para la "palabra del día" -- solo son candidatas a
+# buscarse; su definición real, como siempre, sale de RAE/Wikcionario.
+PALABRAS_DEL_DIA = [
+    "serendipia", "efímero", "melancolía", "ósmosis", "quimera", "epifanía",
+    "nostalgia", "resiliencia", "empatía", "sutil", "ecuánime", "diáfano",
+    "efervescente", "elocuente", "perspicaz", "ubicuo", "vernáculo",
+    "idiosincrasia", "paradoja", "utopía", "sinergia", "letargo", "aurora",
+    "efluvio", "candor", "sosiego", "algarabía", "vestigio", "epítome",
+    "arcano", "lánguido", "gregario", "hosco", "pletórico",
+]
+
+PALABRA_DEL_DIA_INTRO = (
+    "🦉 Buenos días. Hoy le traigo, de entre mis anaqueles, una palabra que "
+    "bien merece su atención:"
+)
+
 
 def intro_resultado() -> str:
     return random.choice(INTROS_RESULTADO)
