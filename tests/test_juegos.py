@@ -23,6 +23,19 @@ def test_teclado_juegos_de_categoria_inexistente_devuelve_none():
     assert juegos.teclado_juegos_de_categoria("no-existe") is None
 
 
+def test_texto_juegos_de_categoria_incluye_titulo_y_descripcion_de_cada_juego():
+    texto = juegos.texto_juegos_de_categoria("fe")
+    assert texto is not None
+    for juego_id, juego in JUEGOS.items():
+        if juego["categoria"] == "fe":
+            assert juego["titulo"] in texto
+            assert juego["descripcion"] in texto
+
+
+def test_texto_juegos_de_categoria_inexistente_devuelve_none():
+    assert juegos.texto_juegos_de_categoria("no-existe") is None
+
+
 def test_iniciar_juego_arma_estado_y_teclado():
     user_data = {}
     juego_id = next(iter(JUEGOS))
@@ -30,6 +43,7 @@ def test_iniciar_juego_arma_estado_y_teclado():
     assert resultado is not None
     mensaje, teclado = resultado
     assert JUEGOS[juego_id]["titulo"] in mensaje
+    assert JUEGOS[juego_id]["descripcion"] in mensaje
     assert "juegos" in user_data
     assert len(user_data["juegos"]["pendientes"]) == len(JUEGOS[juego_id]["prompts"]) - 1
     assert len(teclado.inline_keyboard[0]) == 2
@@ -90,3 +104,9 @@ def test_catalogo_tiene_cien_juegos_diez_prompts_cada_uno():
     for juego in JUEGOS.values():
         assert len(juego["prompts"]) == 10
         assert len(set(juego["prompts"])) == 10
+
+
+def test_catalogo_todos_los_juegos_tienen_descripcion():
+    for juego in JUEGOS.values():
+        assert isinstance(juego.get("descripcion"), str)
+        assert len(juego["descripcion"].strip()) > 0

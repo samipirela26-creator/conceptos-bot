@@ -72,6 +72,13 @@
       "title": "Juegos de conversación con amigos",
       "description": "Agregar comando /juegos con un catálogo de 100 juegos de conversación (src/bot/juegos_data.py) organizados en 10 categorías (rápidas, hipotéticos, dilemas, verdad, debate, creatividad, conócete, ingenio, memoria, fe), navegable 100% por botones inline: categorías -> juegos de la categoría -> prompts del juego (Siguiente/Salir), sin texto libre. Cada juego sirve sus prompts en orden aleatorio sin repetir hasta agotarlos (mismo patrón de estado efímero en context.user_data que /ahorcado, no SQLite). Contenido divertido y a veces vergonzoso pero nunca de tipo sexual. NOTA DE ALCANCE: el pedido original era de 500 prompts por juego; esta primera iteración entrega 10 prompts por juego (1000 en total) como piloto -- queda pendiente ampliar el contenido por juego en iteraciones futuras si se desea acercar a esa cifra.",
       "passes": true
+    },
+    {
+      "id": "US-011",
+      "priority": 11,
+      "title": "Explicación de cada juego de conversación",
+      "description": "Cada uno de los 100 juegos de /juegos (US-010) ahora tiene un campo 'descripcion' en juegos_data.py que explica en una frase cómo se juega. Se muestra en dos momentos: al listar los juegos de una categoría (título + descripción de cada uno, antes de elegir con los botones) y al iniciar un juego concreto (título + descripción + primer prompt), para que el usuario sepa la mecánica antes y durante la partida.",
+      "passes": true
     }
   ]
 }

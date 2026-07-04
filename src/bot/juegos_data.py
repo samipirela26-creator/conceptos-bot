@@ -20,6 +20,7 @@ JUEGOS = {
     "rapidas_ronda_relampago": {
         "categoria": "rapidas",
         "titulo": "Ronda relámpago",
+        "descripcion": "Respondan por turnos en menos de 10 segundos cada uno, sin pensarlo de más: gana el ritmo, no la respuesta perfecta.",
         "prompts": [
             "¿Cuál es la última canción que se te quedó pegada en la cabeza?",
             "¿Qué comerías ahora mismo si pudieras pedir cualquier cosa?",
@@ -36,6 +37,7 @@ JUEGOS = {
     "rapidas_ruleta_curiosidad": {
         "categoria": "rapidas",
         "titulo": "La ruleta de la curiosidad",
+        "descripcion": "Cada quien responde lo primero que se le ocurra ante el dato o la pregunta, así suene random: aquí no hay respuestas incorrectas.",
         "prompts": [
             "Dato: los pulpos tienen tres corazones. ¿Qué opinas de ellos?",
             "Dato: la miel nunca se echa a perder. ¿La probaste vencida sin saberlo alguna vez?",
@@ -52,6 +54,7 @@ JUEGOS = {
     "rapidas_bingo_respuestas": {
         "categoria": "rapidas",
         "titulo": "Bingo de respuestas",
+        "descripcion": "Respondan en voz alta y comparen: si dos coinciden en algo parecido, ¡bingo!",
         "prompts": [
             "Nombra rápido: tu color favorito, tu animal favorito y tu comida favorita.",
             "Nombra rápido: un miedo tonto, una manía y un talento oculto.",
@@ -68,6 +71,7 @@ JUEGOS = {
     "rapidas_interrogatorio_expres": {
         "categoria": "rapidas",
         "titulo": "El interrogatorio exprés",
+        "descripcion": "Un jugador contesta todas las preguntas sin dudar ni un segundo, como si estuviera en un interrogatorio de verdad.",
         "prompts": [
             "¿Última vez que lloraste de risa? Cuenta qué pasó.",
             "¿Última vez que te caíste en público?",
@@ -84,6 +88,7 @@ JUEGOS = {
     "rapidas_capsula_tiempo": {
         "categoria": "rapidas",
         "titulo": "La cápsula del tiempo",
+        "descripcion": "Respondan pensando que esta conversación quedará guardada en una cápsula del tiempo para dentro de 20 años.",
         "prompts": [
             "¿Qué te gustaba hace 10 años que hoy te da vergüenza?",
             "¿Qué peinado o estilo tuviste que hoy no repetirías jamás?",
@@ -100,6 +105,7 @@ JUEGOS = {
     "rapidas_termometro": {
         "categoria": "rapidas",
         "titulo": "El termómetro",
+        "descripcion": "Cada quien mide qué tan extrema es su opinión sobre el tema, del 1 al 10, y lo justifica en una frase.",
         "prompts": [
             "Del 1 al 10, ¿qué tan desordenado eres? Explica el número.",
             "Del 1 al 10, ¿qué tan dramático te pones cuando te enfermas?",
@@ -116,6 +122,7 @@ JUEGOS = {
     "rapidas_pregunta_libre": {
         "categoria": "rapidas",
         "titulo": "Pregúntame lo que quieras",
+        "descripcion": "El grupo dispara preguntas curiosas al azar y cada quien responde con total libertad, sin filtro.",
         "prompts": [
             "¿Qué cosa haces cuando nadie te ve que jamás admitirías en público?",
             "¿Cuál es tu 'guilty pleasure' más vergonzoso?",
@@ -132,6 +139,7 @@ JUEGOS = {
     "rapidas_lista_de_tres": {
         "categoria": "rapidas",
         "titulo": "La lista de los 3",
+        "descripcion": "Para cada consigna, cada jugador da exactamente tres respuestas, ni una más ni una menos.",
         "prompts": [
             "3 lugares que quieres visitar antes de morir.",
             "3 cosas que harías si fueras invisible por un día.",
@@ -148,6 +156,7 @@ JUEGOS = {
     "rapidas_manantial_curiosidades": {
         "categoria": "rapidas",
         "titulo": "El manantial de curiosidades",
+        "descripcion": "Preguntas curiosas y ligeras para conocerse mejor, una tras otra, sin pensarlas demasiado.",
         "prompts": [
             "¿Cuál es la mentira más grande que te han creído?",
             "¿Cuál es el rumor más raro que han inventado sobre ti?",
@@ -164,6 +173,7 @@ JUEGOS = {
     "rapidas_si_o_no": {
         "categoria": "rapidas",
         "titulo": "Sí o No relámpago",
+        "descripcion": "Solo se puede responder 'sí' o 'no' -- nada de explicaciones, aunque después el grupo pregunte por qué.",
         "prompts": [
             "¿Alguna vez fingiste estar enfermo para faltar a algo?",
             "¿Alguna vez espiaste el celular de alguien?",
@@ -180,6 +190,7 @@ JUEGOS = {
     "hipoteticos_clasico": {
         "categoria": "hipoteticos",
         "titulo": "¿Qué harías si...? clásico",
+        "descripcion": "El clásico '¿qué harías si...?' -- cada quien imagina el escenario y cuenta, con lujo de detalle, qué haría.",
         "prompts": [
             "¿Qué harías si se te olvidara el nombre de alguien justo al presentarlo?",
             "¿Qué harías si se te rompieran los pantalones en público?",
@@ -196,6 +207,7 @@ JUEGOS = {
     "hipoteticos_otra_vida": {
         "categoria": "hipoteticos",
         "titulo": "Un día en otra vida",
+        "descripcion": "Imaginen que despiertan viviendo la vida de otra persona por un día completo, y cuenten cómo sería.",
         "prompts": [
             "¿Qué harías si fueras el presidente de tu país por un día?",
             "¿Qué harías si fueras tu mascota (o la mascota de un amigo) por un día?",
@@ -212,6 +224,7 @@ JUEGOS = {
     "hipoteticos_boton_magico": {
         "categoria": "hipoteticos",
         "titulo": "El botón mágico",
+        "descripcion": "Hay un botón mágico que cambia una sola cosa del mundo o de tu vida: decide si lo presionas y qué pasaría.",
         "prompts": [
             "Hay un botón que borra un recuerdo vergonzoso tuyo para siempre. ¿Lo presionas? ¿Cuál borrarías?",
             "Hay un botón que te hace decir siempre la verdad por 24 horas. ¿Lo presionas?",
@@ -228,6 +241,7 @@ JUEGOS = {
     "hipoteticos_superpoder_sorpresa": {
         "categoria": "hipoteticos",
         "titulo": "Superpoder sorpresa",
+        "descripcion": "Les toca un superpoder al azar (¡no lo eligen!) e imaginan cómo lo usarían en su día a día.",
         "prompts": [
             "Tienes el poder de saber cuándo alguien miente, pero solo por hoy. ¿Qué harías?",
             "Tienes el poder de teletransportarte, pero solo a lugares donde ya estuviste. ¿A dónde vas?",
@@ -244,6 +258,7 @@ JUEGOS = {
     "hipoteticos_viaje_tiempo": {
         "categoria": "hipoteticos",
         "titulo": "El viaje en el tiempo",
+        "descripcion": "Un viaje en el tiempo, al pasado o al futuro: cuenten a dónde irían y qué harían con esa oportunidad.",
         "prompts": [
             "Si pudieras volver a tu yo de 10 años, ¿qué le dirías?",
             "Si pudieras viajar a hace 100 años, ¿a dónde y por qué?",
@@ -260,6 +275,7 @@ JUEGOS = {
     "hipoteticos_isla_desierta": {
         "categoria": "hipoteticos",
         "titulo": "La isla desierta",
+        "descripcion": "Quedan varados en una isla desierta: elijan qué (o a quién) se llevarían y cómo sobrevivirían.",
         "prompts": [
             "Naufragas en una isla desierta: ¿qué 3 cosas de tu bolsillo/cartera te salvarían?",
             "Solo puedes llevar una persona del grupo a la isla contigo. ¿A quién y por qué?",
@@ -276,6 +292,7 @@ JUEGOS = {
     "hipoteticos_millon_inesperado": {
         "categoria": "hipoteticos",
         "titulo": "El millón inesperado",
+        "descripcion": "Les cae un millón de dólares de la nada: cuenten, sin pena, en qué se lo gastarían primero.",
         "prompts": [
             "Te ganas la lotería mañana. ¿Qué es lo primero que compras, sin pensarlo?",
             "Un familiar lejano te deja una herencia enorme. ¿En qué la gastarías primero?",
@@ -292,6 +309,7 @@ JUEGOS = {
     "hipoteticos_cambia_cuerpo": {
         "categoria": "hipoteticos",
         "titulo": "Cambia de cuerpo",
+        "descripcion": "Por un día cambian de cuerpo con alguien del grupo o con un personaje famoso: imaginen cómo sería vivir así.",
         "prompts": [
             "Despiertas en el cuerpo de otra persona del grupo por un día. ¿Qué es lo primero que haces?",
             "Si intercambiaras cuerpo con tu mejor amigo, ¿qué cosa suya cambiarías primero?",
@@ -308,6 +326,7 @@ JUEGOS = {
     "hipoteticos_fin_del_mundo": {
         "categoria": "hipoteticos",
         "titulo": "El fin del mundo (versión ligera)",
+        "descripcion": "Falta un día para el fin del mundo (versión ligera, sin drama): ¿qué harían con esas últimas 24 horas?",
         "prompts": [
             "Si el mundo se acabara en una semana, ¿qué harías el primer día?",
             "Si solo pudieras salvar tres objetos de tu casa, ¿cuáles serían?",
@@ -324,6 +343,7 @@ JUEGOS = {
     "hipoteticos_deseo_condicion": {
         "categoria": "hipoteticos",
         "titulo": "Un deseo, una condición",
+        "descripcion": "Piden un deseo que se cumple, pero con una condición incómoda de por medio: decidan si vale la pena.",
         "prompts": [
             "Te conceden un deseo, pero debes cantar en público cada vez que lo uses. ¿Lo pides igual?",
             "Puedes ser más inteligente, pero olvidas un recuerdo feliz al azar. ¿Aceptas?",
@@ -340,6 +360,7 @@ JUEGOS = {
     "dilemas_esto_o_lo_otro": {
         "categoria": "dilemas",
         "titulo": "Esto o lo otro",
+        "descripcion": "El clásico 'esto o lo otro': eligen una de las dos opciones sin poder quedarse callados ni con las dos.",
         "prompts": [
             "¿Playa o montaña?",
             "¿Ducha en la mañana o en la noche?",
@@ -356,6 +377,7 @@ JUEGOS = {
     "dilemas_imposible": {
         "categoria": "dilemas",
         "titulo": "El dilema imposible",
+        "descripcion": "Dos opciones igual de difíciles de elegir: toca decidir rápido y defender por qué.",
         "prompts": [
             "¿Perder todos tus recuerdos felices o todos los tristes?",
             "¿Saber cuándo vas a morir o cómo vas a morir?",
@@ -372,6 +394,7 @@ JUEGOS = {
     "dilemas_elige_bando": {
         "categoria": "dilemas",
         "titulo": "Elige tu bando",
+        "descripcion": "Toca tomar partido entre dos bandos o posturas contrarias, aunque en el fondo les gusten ambas.",
         "prompts": [
             "¿Perros o gatos?",
             "¿Café o té?",
@@ -388,6 +411,7 @@ JUEGOS = {
     "dilemas_la_balanza": {
         "categoria": "dilemas",
         "titulo": "La balanza",
+        "descripcion": "Pesen dos cosas de valor parecido y decidan cuál pesa más para ustedes, y por qué.",
         "prompts": [
             "¿Tener mucho tiempo libre pero poco dinero, o mucho dinero pero poco tiempo libre?",
             "¿Un trabajo que odias pero bien pagado, o uno que amas pero mal pagado?",
@@ -404,6 +428,7 @@ JUEGOS = {
     "dilemas_nunca_mas_uno": {
         "categoria": "dilemas",
         "titulo": "Nunca más uno de los dos",
+        "descripcion": "De dos cosas que aman, deben renunciar para siempre a una sola, sin trampas.",
         "prompts": [
             "¿Renunciar para siempre al chocolate o al queso?",
             "¿Renunciar para siempre a las redes sociales o a la televisión?",
@@ -420,6 +445,7 @@ JUEGOS = {
     "dilemas_superlativos": {
         "categoria": "dilemas",
         "titulo": "Superlativos de grupo",
+        "descripcion": "El grupo vota quién de todos encaja más con cada superlativo (el más gracioso, el más despistado, etc.).",
         "prompts": [
             "¿Quién del grupo sobreviviría más tiempo en una isla desierta?",
             "¿Quién del grupo se haría famoso primero, y por qué motivo probablemente vergonzoso?",
@@ -436,6 +462,7 @@ JUEGOS = {
     "dilemas_semaforo": {
         "categoria": "dilemas",
         "titulo": "El semáforo de decisiones",
+        "descripcion": "Cada opción se clasifica en verde (sí, sin duda), amarillo (tal vez) o rojo (jamás), y se explica por qué.",
         "prompts": [
             "¿Contestar una llamada random de un número desconocido, o dejarla ir a buzón?",
             "¿Comer algo que se te cayó al piso (5 segundos) o quedarte con hambre?",
@@ -452,6 +479,7 @@ JUEGOS = {
     "dilemas_moneda_al_aire": {
         "categoria": "dilemas",
         "titulo": "La moneda al aire",
+        "descripcion": "Se lanza una moneda mental: cara o sello decide entre dos opciones, y toca defender el resultado como si lo hubieran elegido.",
         "prompts": [
             "¿Empezar de cero en otra ciudad, o quedarte donde estás siempre?",
             "¿Tener un año libre sin trabajar (con lo básico cubierto), o un ascenso ahora mismo?",
@@ -468,6 +496,7 @@ JUEGOS = {
     "dilemas_menu_imposible": {
         "categoria": "dilemas",
         "titulo": "El menú imposible",
+        "descripcion": "De un menú de opciones absurdas o incómodas, hay que elegir una sí o sí.",
         "prompts": [
             "¿Comer pizza con piña para siempre, o nunca más comer pizza?",
             "¿Comer siempre comida fría, o siempre comida sin sal?",
@@ -484,6 +513,7 @@ JUEGOS = {
     "dilemas_prefiero_perder": {
         "categoria": "dilemas",
         "titulo": "Prefiero perder A que perder B",
+        "descripcion": "Entre perder A o perder B, ninguna gusta, pero hay que decidir cuál duele menos.",
         "prompts": [
             "¿Prefieres perder tu álbum de fotos de la infancia o tu diario/notas personales?",
             "¿Prefieres perder tu canción favorita para siempre o tu película favorita para siempre?",
@@ -500,6 +530,7 @@ JUEGOS = {
     "verdad_sincera": {
         "categoria": "verdad",
         "titulo": "Verdad sincera",
+        "descripcion": "Preguntas para responder con total sinceridad, sin salidas fáciles ni respuestas a medias.",
         "prompts": [
             "¿Cuál es el apodo más vergonzoso que te han puesto?",
             "¿Cuál ha sido tu peor 'ghosting' dado o recibido?",
@@ -516,6 +547,7 @@ JUEGOS = {
     "verdad_secreto_ligero": {
         "categoria": "verdad",
         "titulo": "El secreto ligero",
+        "descripcion": "Cuenten un secreto pequeño y gracioso, de esos que no comprometen a nadie pero sí dan risa.",
         "prompts": [
             "Cuenta algo de ti que muy pocos amigos saben.",
             "Cuenta un hábito raro que tienes cuando estás solo.",
@@ -532,6 +564,7 @@ JUEGOS = {
     "verdad_confesion_curiosa": {
         "categoria": "verdad",
         "titulo": "La confesión curiosa",
+        "descripcion": "Confiesen algo curioso sobre ustedes que probablemente nadie en el grupo sabía.",
         "prompts": [
             "¿Cuál es tu manía más rara comiendo?",
             "¿Qué te da miedo sin razón lógica (arañas, oscuridad, algo random)?",
@@ -548,6 +581,7 @@ JUEGOS = {
     "verdad_alguna_vez": {
         "categoria": "verdad",
         "titulo": "¿Alguna vez...? (versión amable)",
+        "descripcion": "Preguntas tipo '¿alguna vez has...?' en versión amable: se responde con honestidad, entre risas.",
         "prompts": [
             "¿Alguna vez fingiste que te gustaba un regalo que odiabas?",
             "¿Alguna vez te hiciste pasar por otra persona por chat?",
@@ -564,6 +598,7 @@ JUEGOS = {
     "verdad_diario_abierto": {
         "categoria": "verdad",
         "titulo": "El diario abierto",
+        "descripcion": "Como si leyeran una página de su diario en voz alta: cuenten algo personal pero liviano.",
         "prompts": [
             "¿Cuál es tu recuerdo más vergonzoso de la primaria?",
             "¿Cuál fue tu peor berrinche de niño que recuerdes?",
@@ -580,6 +615,7 @@ JUEGOS = {
     "verdad_camara_indiscreta": {
         "categoria": "verdad",
         "titulo": "La cámara indiscreta",
+        "descripcion": "Imaginen que una cámara oculta grabó ese momento vergonzoso que nunca han contado: ahora toca contarlo.",
         "prompts": [
             "Si alguien viera tu historial de redes sociales de esta semana, ¿qué pensaría de ti?",
             "Si alguien leyera tus últimos 5 mensajes enviados, ¿qué encontraría?",
@@ -596,6 +632,7 @@ JUEGOS = {
     "verdad_o_verdad": {
         "categoria": "verdad",
         "titulo": "Verdad o verdad",
+        "descripcion": "No hay 'reto': aquí solo hay verdad o verdad, así que toca responder sin escapatoria.",
         "prompts": [
             "Elige: ¿cuál es tu mayor inseguridad, o cuál es tu mayor orgullo?",
             "Elige: ¿qué es lo que más te asusta del futuro, o qué es lo que más esperas de él?",
@@ -612,6 +649,7 @@ JUEGOS = {
     "verdad_el_espejo": {
         "categoria": "verdad",
         "titulo": "El espejo",
+        "descripcion": "Respondan como si se vieran al espejo y tuvieran que ser completamente honestos consigo mismos.",
         "prompts": [
             "¿Cómo crees que te describirían tus amigos en 3 palabras?",
             "¿Qué crees que la gente piensa de ti al conocerte, y es verdad?",
@@ -628,6 +666,7 @@ JUEGOS = {
     "verdad_carta_sincera": {
         "categoria": "verdad",
         "titulo": "La carta sincera",
+        "descripcion": "Imaginen que escriben una carta sincera a alguien: cuenten qué dirían sin filtros.",
         "prompts": [
             "Si le escribieras una carta corta a tu yo del pasado, ¿qué le dirías?",
             "Si le escribieras una carta a alguien que ya no está en tu vida, ¿qué dirías?",
@@ -644,6 +683,7 @@ JUEGOS = {
     "verdad_detector_mentiras": {
         "categoria": "verdad",
         "titulo": "El detector de mentiras",
+        "descripcion": "El grupo decide si la respuesta suena a verdad o a mentira: ¡que no los descubran fingiendo!",
         "prompts": [
             "Di 3 cosas sobre ti: dos verdaderas y una falsa. Que el grupo adivine cuál miente.",
             "Di 3 lugares que has visitado: dos reales y uno inventado. Que adivinen cuál.",
@@ -660,6 +700,7 @@ JUEGOS = {
     "debate_indefendible": {
         "categoria": "debate",
         "titulo": "Defiende lo indefendible",
+        "descripcion": "Toca defender con toda convicción una postura absurda o indefendible, aunque no la compartan ni un poco.",
         "prompts": [
             "Defiende con argumentos serios: la piña sí va en la pizza.",
             "Defiende con argumentos serios: es mejor llegar tarde que temprano.",
@@ -676,6 +717,7 @@ JUEGOS = {
     "debate_abogado_diablo": {
         "categoria": "debate",
         "titulo": "El abogado del diablo",
+        "descripcion": "Hagan de abogado del diablo: defiendan el punto de vista contrario al que de verdad piensan.",
         "prompts": [
             "Di tu opinión sobre algo cotidiano y luego argumenta exactamente lo contrario.",
             "Defiende la postura opuesta a tu equipo o película favorita.",
@@ -692,6 +734,7 @@ JUEGOS = {
     "debate_mesa_redonda": {
         "categoria": "debate",
         "titulo": "La mesa redonda",
+        "descripcion": "Un tema sobre la mesa y cada quien da su opinión por turnos, como en una mesa redonda de verdad.",
         "prompts": [
             "Debate: ¿es peor llegar tarde o cancelar a última hora?",
             "Debate: ¿es mejor trabajar desde casa o en oficina?",
@@ -708,6 +751,7 @@ JUEGOS = {
     "debate_congreso_improvisado": {
         "categoria": "debate",
         "titulo": "El congreso improvisado",
+        "descripcion": "Simulen un congreso improvisado: cada quien 'legisla' su opinión sobre el tema como si fuera ley.",
         "prompts": [
             "Propón y defiende una ley absurda para tu sociedad ideal: nadie puede usar el celular después de las 9pm.",
             "Propón y defiende una ley absurda: todos deben bailar 5 minutos antes de trabajar.",
@@ -724,6 +768,7 @@ JUEGOS = {
     "debate_bien_o_mal": {
         "categoria": "debate",
         "titulo": "¿Bien o mal?",
+        "descripcion": "Un caso gris que no es ni claramente bueno ni malo: decidan de qué lado caen y por qué.",
         "prompts": [
             "¿Está bien mentir para no herir los sentimientos de alguien?",
             "¿Está bien leer los mensajes de alguien si te lo permite explícitamente?",
@@ -740,6 +785,7 @@ JUEGOS = {
     "debate_juicio_rapido": {
         "categoria": "debate",
         "titulo": "El juicio rápido",
+        "descripcion": "Como en un juicio exprés: se presenta el 'caso' y el grupo da su veredicto en segundos.",
         "prompts": [
             "Caso: alguien llega tarde siempre pero avisa con tiempo. Da tu veredicto.",
             "Caso: alguien cancela un plan por cansancio pero luego publica que salió con otros. Da tu veredicto.",
@@ -756,6 +802,7 @@ JUEGOS = {
     "debate_balanza_valores": {
         "categoria": "debate",
         "titulo": "La balanza de valores",
+        "descripcion": "Comparen dos valores importantes y decidan cuál pesa más cuando hay que elegir entre ellos.",
         "prompts": [
             "Ordena del más al menos importante: honestidad, lealtad, puntualidad. Defiende el orden.",
             "Ordena del más al menos importante: ambición, humildad, generosidad. Defiende el orden.",
@@ -772,6 +819,7 @@ JUEGOS = {
     "debate_gustos": {
         "categoria": "debate",
         "titulo": "El debate de los gustos",
+        "descripcion": "Sobre gustos no hay nada escrito, pero aquí sí toca defender el propio con argumentos.",
         "prompts": [
             "Defiende por qué tu película favorita es objetivamente la mejor.",
             "Defiende por qué tu comida favorita le gana a cualquier otra.",
@@ -788,6 +836,7 @@ JUEGOS = {
     "debate_cambia_mi_mente": {
         "categoria": "debate",
         "titulo": "Cambia mi mente",
+        "descripcion": "Alguien defiende una opinión y reta al resto a intentar cambiársela con buenos argumentos.",
         "prompts": [
             "En 30 segundos, argumenta: las redes sociales hacen más bien que mal.",
             "En 30 segundos, argumenta: es mejor vivir sin planes fijos.",
@@ -804,6 +853,7 @@ JUEGOS = {
     "debate_panel_expertos": {
         "categoria": "debate",
         "titulo": "El panel de expertos",
+        "descripcion": "Finjan ser un panel de expertos improvisado y opinen sobre el tema con total seguridad, aunque no sepan nada de él.",
         "prompts": [
             "Finge ser experto en 'el arte de procrastinar' y da tu opinión con seguridad.",
             "Finge ser experto en 'cómo fingir que entendiste un chiste' y da tu opinión con seguridad.",
@@ -820,6 +870,7 @@ JUEGOS = {
     "creatividad_historia_cadena": {
         "categoria": "creatividad",
         "titulo": "La historia en cadena",
+        "descripcion": "Entre todos arman una historia: cada quien agrega una frase siguiendo lo que dijo el anterior.",
         "prompts": [
             "Empieza una historia con: 'Todo empezó cuando encontré una llave que no abría ninguna puerta de mi casa...'",
             "Empieza una historia con: 'Nunca debí aceptar cuidar esa mascota por un fin de semana...'",
@@ -836,6 +887,7 @@ JUEGOS = {
     "creatividad_micro_cuento": {
         "categoria": "creatividad",
         "titulo": "El micro-cuento",
+        "descripcion": "Inventen un cuento cortísimo, de unas pocas frases, a partir de la consigna que les toque.",
         "prompts": [
             "Cuenta una historia completa (inicio, nudo, final) en 30 segundos sobre: un tesoro perdido.",
             "Cuenta una historia completa en 30 segundos sobre: una visita inesperada.",
@@ -852,6 +904,7 @@ JUEGOS = {
     "creatividad_personaje_sorpresa": {
         "categoria": "creatividad",
         "titulo": "El personaje sorpresa",
+        "descripcion": "Les toca improvisar como un personaje al azar: métanse en el papel y respondan como él o ella lo haría.",
         "prompts": [
             "Improvisa como si fueras un mesero muy dramático explicando el menú del día.",
             "Improvisa como si fueras un detective investigando quién se comió la última galleta.",
@@ -868,6 +921,7 @@ JUEGOS = {
     "creatividad_entrevista_imaginaria": {
         "categoria": "creatividad",
         "titulo": "La entrevista imaginaria",
+        "descripcion": "Uno hace de entrevistador y otro de un personaje imaginario o famoso: improvisen la entrevista.",
         "prompts": [
             "Responde como si fueras una celebridad famosa a la que le preguntan su secreto del éxito.",
             "Responde como si fueras un explorador que acaba de descubrir algo increíble.",
@@ -884,6 +938,7 @@ JUEGOS = {
     "creatividad_guion_improvisado": {
         "categoria": "creatividad",
         "titulo": "El guion improvisado",
+        "descripcion": "Sobre una escena dada, improvisen el diálogo como si fueran actores sin guion.",
         "prompts": [
             "Recrea una escena corta: dos vecinos discutiendo por el ruido de una fiesta.",
             "Recrea una escena corta: una entrevista de trabajo que va mal desde el saludo.",
@@ -900,6 +955,7 @@ JUEGOS = {
     "creatividad_cuentacuentos": {
         "categoria": "creatividad",
         "titulo": "El cuentacuentos",
+        "descripcion": "Cuenten una historia corta y original a partir de la idea que les toque, como buenos cuentacuentos.",
         "prompts": [
             "Inventa un final alternativo para Caperucita Roja.",
             "Inventa un final alternativo para Los Tres Cerditos.",
@@ -916,6 +972,7 @@ JUEGOS = {
     "creatividad_receta_imposible": {
         "categoria": "creatividad",
         "titulo": "La receta imposible",
+        "descripcion": "Inventen una receta absurda o imposible con los ingredientes, reales o disparatados, que les toquen.",
         "prompts": [
             "Inventa una receta con: chocolate, cebolla y helado.",
             "Inventa una receta con: café, queso y fresas.",
@@ -932,6 +989,7 @@ JUEGOS = {
     "creatividad_titular_falso": {
         "categoria": "creatividad",
         "titulo": "El titular falso",
+        "descripcion": "Inventen un titular de noticia falso y divertido a partir de la consigna.",
         "prompts": [
             "Inventa una noticia divertida usando las palabras: gato, alcalde, helado.",
             "Inventa una noticia divertida usando las palabras: robot, panadería, lluvia.",
@@ -948,6 +1006,7 @@ JUEGOS = {
     "creatividad_monologo_minuto": {
         "categoria": "creatividad",
         "titulo": "El monólogo de un minuto",
+        "descripcion": "Improvisen un monólogo de un minuto sobre el tema que les toque, sin parar a pensar mucho.",
         "prompts": [
             "Habla sin parar por un minuto sobre: por qué los lunes tienen mala fama.",
             "Habla sin parar por un minuto sobre: la importancia de la siesta.",
@@ -964,6 +1023,7 @@ JUEGOS = {
     "creatividad_objeto_misterioso": {
         "categoria": "creatividad",
         "titulo": "El objeto misterioso",
+        "descripcion": "Describan o inventen la historia de un objeto misterioso a partir de la pista que les den.",
         "prompts": [
             "Inventa una historia sobre el origen misterioso de: un paraguas roto.",
             "Inventa una historia sobre el origen misterioso de: una llave sin puerta conocida.",
@@ -980,6 +1040,7 @@ JUEGOS = {
     "conocerse_preguntas_del_alma": {
         "categoria": "conocerse",
         "titulo": "Preguntas del alma",
+        "descripcion": "Preguntas profundas para conocerse de verdad, más allá de lo superficial.",
         "prompts": [
             "¿Qué sueño tienes que no le has contado a casi nadie?",
             "¿Qué es lo que más te asusta de crecer o envejecer?",
@@ -996,6 +1057,7 @@ JUEGOS = {
     "conocerse_linea_tiempo": {
         "categoria": "conocerse",
         "titulo": "La línea de tiempo",
+        "descripcion": "Recorran su propia línea de tiempo respondiendo sobre distintos momentos de su vida.",
         "prompts": [
             "¿Cuál fue el momento en que sentiste que 'creciste' de golpe?",
             "¿Cuál ha sido la decisión más importante que has tomado hasta ahora?",
@@ -1012,6 +1074,7 @@ JUEGOS = {
     "conocerse_mapa_gratitud": {
         "categoria": "conocerse",
         "titulo": "El mapa de gratitud",
+        "descripcion": "Armen un pequeño mapa de las cosas y personas por las que están agradecidos.",
         "prompts": [
             "Nombra algo pequeño de hoy por lo que estás agradecido.",
             "Nombra a una persona por la que estás agradecido y por qué.",
@@ -1028,6 +1091,7 @@ JUEGOS = {
     "conocerse_metas_secretas": {
         "categoria": "conocerse",
         "titulo": "Las metas secretas",
+        "descripcion": "Compartan una meta o sueño que normalmente no cuentan a cualquiera.",
         "prompts": [
             "Comparte una meta personal que no sueles contar.",
             "Comparte un sueño 'poco realista' que aún no abandonas del todo.",
@@ -1044,6 +1108,7 @@ JUEGOS = {
     "conocerse_recuerdo_favorito": {
         "categoria": "conocerse",
         "titulo": "El recuerdo favorito",
+        "descripcion": "Cuenten un recuerdo favorito relacionado con la consigna que les toque.",
         "prompts": [
             "Cuenta un recuerdo feliz relacionado con la comida.",
             "Cuenta un recuerdo feliz relacionado con un viaje.",
@@ -1060,6 +1125,7 @@ JUEGOS = {
     "conocerse_carta_futuro": {
         "categoria": "conocerse",
         "titulo": "La carta al futuro",
+        "descripcion": "Imaginen que le escriben una carta a su yo del futuro (o del pasado) sobre el tema que les toque.",
         "prompts": [
             "¿Qué le dirías a tu yo de dentro de 10 años?",
             "¿Qué le preguntarías a tu yo de dentro de 10 años?",
@@ -1076,6 +1142,7 @@ JUEGOS = {
     "conocerse_valor_importante": {
         "categoria": "conocerse",
         "titulo": "El valor más importante",
+        "descripcion": "Reflexionen sobre qué valor personal es el más importante para ustedes y por qué.",
         "prompts": [
             "¿Qué valor crees que más te define y por qué?",
             "¿Qué valor te gustaría fortalecer más este año?",
@@ -1092,6 +1159,7 @@ JUEGOS = {
     "conocerse_lecciones_vida": {
         "categoria": "conocerse",
         "titulo": "Las lecciones de vida",
+        "descripcion": "Compartan una lección de vida que hayan aprendido relacionada con la consigna.",
         "prompts": [
             "Comparte una lección que aprendiste de un fracaso.",
             "Comparte una lección que aprendiste de una amistad que terminó.",
@@ -1108,6 +1176,7 @@ JUEGOS = {
     "conocerse_circulo_confianza": {
         "categoria": "conocerse",
         "titulo": "El círculo de confianza",
+        "descripcion": "Preguntas para fortalecer la confianza del grupo, respondiendo con apertura genuina.",
         "prompts": [
             "¿Qué es lo que más valoras de la amistad de las personas aquí presentes?",
             "¿Qué te hace confiar en alguien rápidamente?",
@@ -1124,6 +1193,7 @@ JUEGOS = {
     "conocerse_tres_palabras": {
         "categoria": "conocerse",
         "titulo": "Mi historia en 3 palabras",
+        "descripcion": "Resuman en solo tres palabras lo que la consigna les pide: ¡nada más, nada menos!",
         "prompts": [
             "Resume tu infancia en 3 palabras.",
             "Resume tu adolescencia en 3 palabras.",
@@ -1140,6 +1210,7 @@ JUEGOS = {
     "ingenio_categorias": {
         "categoria": "ingenio",
         "titulo": "Categorías",
+        "descripcion": "Digan rápido varios ejemplos de la categoría que les toque, sin repetir ni trabarse.",
         "prompts": [
             "Nombra rápido 5 frutas antes de que se acabe el tiempo.",
             "Nombra rápido 5 países que empiecen con la misma letra.",
@@ -1156,6 +1227,7 @@ JUEGOS = {
     "ingenio_palabra_encadenada": {
         "categoria": "ingenio",
         "titulo": "Palabra encadenada",
+        "descripcion": "Cada quien dice una palabra que empiece con la última letra de la palabra anterior.",
         "prompts": [
             "Empieza con la palabra 'sol': la siguiente debe iniciar con su última letra.",
             "Empieza con la palabra 'luna': la siguiente debe iniciar con su última letra.",
@@ -1172,6 +1244,7 @@ JUEGOS = {
     "ingenio_acrostico_expres": {
         "categoria": "ingenio",
         "titulo": "El acróstico exprés",
+        "descripcion": "Armen un acróstico improvisado usando las letras de la palabra que les toque.",
         "prompts": [
             "Crea una frase divertida usando las letras de la palabra AMOR.",
             "Crea una frase divertida usando las letras de la palabra FIESTA.",
@@ -1188,6 +1261,7 @@ JUEGOS = {
     "ingenio_rima_si_puedes": {
         "categoria": "ingenio",
         "titulo": "Rima si puedes",
+        "descripcion": "Intenten responder o improvisar en rima, aunque cueste un poco de esfuerzo mental.",
         "prompts": [
             "Di una palabra que rime con 'amor'.",
             "Di una palabra que rime con 'corazón'.",
@@ -1204,6 +1278,7 @@ JUEGOS = {
     "ingenio_alfabeto_tematico": {
         "categoria": "ingenio",
         "titulo": "El alfabeto temático",
+        "descripcion": "Recorran el alfabeto dando una palabra del tema para cada letra, lo más rápido posible.",
         "prompts": [
             "Nombra un animal por cada letra que puedas, empezando por la A.",
             "Nombra una comida por cada letra que puedas, empezando por la A.",
@@ -1220,6 +1295,7 @@ JUEGOS = {
     "ingenio_asociacion_libre": {
         "categoria": "ingenio",
         "titulo": "Asociación libre",
+        "descripcion": "Digan lo primero que se les venga a la mente al escuchar la palabra o idea dada.",
         "prompts": [
             "Di la primera palabra que se te ocurra al oír: 'verano'.",
             "Di la primera palabra que se te ocurra al oír: 'familia'.",
@@ -1236,6 +1312,7 @@ JUEGOS = {
     "ingenio_acertijo_del_dia": {
         "categoria": "ingenio",
         "titulo": "El acertijo del día",
+        "descripcion": "Resuelvan entre todos un acertijo o adivinanza mental, sin usar el celular para buscar la respuesta.",
         "prompts": [
             "Adivina: cuanto más le quitas, más grande se hace. ¿Qué es?",
             "Adivina: tiene ciudades pero no casas, bosques pero no árboles, ríos pero no agua. ¿Qué es?",
@@ -1252,6 +1329,7 @@ JUEGOS = {
     "ingenio_contrarios_expres": {
         "categoria": "ingenio",
         "titulo": "Contrarios exprés",
+        "descripcion": "Digan lo más rápido posible el contrario de la palabra o idea que les den.",
         "prompts": [
             "Di el antónimo de 'feliz'.",
             "Di el antónimo de 'rápido'.",
@@ -1268,6 +1346,7 @@ JUEGOS = {
     "ingenio_trabalenguas": {
         "categoria": "ingenio",
         "titulo": "El trabalenguas",
+        "descripcion": "Intenten decir el trabalenguas tres veces seguidas sin trabarse: ¡se vale reírse si fallan!",
         "prompts": [
             "Repite 3 veces rápido: 'Tres tristes tigres tragaban trigo en un trigal'.",
             "Repite 3 veces rápido: 'El cielo está enladrillado, quién lo desenladrillará'.",
@@ -1284,6 +1363,7 @@ JUEGOS = {
     "ingenio_adivinanza": {
         "categoria": "ingenio",
         "titulo": "La adivinanza",
+        "descripcion": "Resuelvan la adivinanza entre todos, dando pistas si hace falta.",
         "prompts": [
             "Adivina: blanca por dentro, verde por fuera, si quieres que te lo diga espera. ¿Qué es?",
             "Adivina: oro parece, plata no es. ¿Qué es?",
@@ -1300,6 +1380,7 @@ JUEGOS = {
     "memoria_quien_dijo_que": {
         "categoria": "memoria",
         "titulo": "¿Quién dijo qué?",
+        "descripcion": "Traten de recordar quién del grupo dijo qué cosa en conversaciones o rondas anteriores.",
         "prompts": [
             "Recuerden entre todos: ¿quién fue el último en contar un chiste en esta charla?",
             "Recuerden entre todos: ¿quién mencionó una comida primero hoy?",
@@ -1316,6 +1397,7 @@ JUEGOS = {
     "memoria_lista_que_crece": {
         "categoria": "memoria",
         "titulo": "La lista que crece",
+        "descripcion": "Cada jugador repite la lista completa de los anteriores y agrega un elemento nuevo, sin equivocarse.",
         "prompts": [
             "Empiecen una lista de frutas: cada quien repite las anteriores y añade una nueva.",
             "Empiecen una lista de países: cada quien repite las anteriores y añade uno nuevo.",
@@ -1332,6 +1414,7 @@ JUEGOS = {
     "memoria_detalle_escondido": {
         "categoria": "memoria",
         "titulo": "El detalle escondido",
+        "descripcion": "Fíjense en un detalle pequeño del entorno o de alguien del grupo y traten de recordarlo después.",
         "prompts": [
             "Alguien cuenta una historia corta de 30 segundos; luego el grupo debe recordar 3 detalles exactos.",
             "Alguien describe su desayuno de hoy con detalle; el grupo debe repetirlo palabra por palabra después.",
@@ -1348,6 +1431,7 @@ JUEGOS = {
     "memoria_de_grupo": {
         "categoria": "memoria",
         "titulo": "Memoria de grupo",
+        "descripcion": "Pongan a prueba qué tanto recuerda el grupo sobre datos, gustos o anécdotas de cada quien.",
         "prompts": [
             "¿Alguien recuerda el dato curioso que se compartió antes en esta misma sesión de juegos?",
             "¿Alguien recuerda qué comida mencionó alguien del grupo hoy?",
@@ -1364,6 +1448,7 @@ JUEGOS = {
     "memoria_resumen_exacto": {
         "categoria": "memoria",
         "titulo": "El resumen exacto",
+        "descripcion": "Resuman con la mayor exactitud posible algo que se dijo antes en la conversación.",
         "prompts": [
             "Resuman en una sola frase de qué trató la última ronda de este juego.",
             "Resuman en una sola frase el chiste o anécdota más reciente que contaron.",
@@ -1380,6 +1465,7 @@ JUEGOS = {
     "memoria_secuencia": {
         "categoria": "memoria",
         "titulo": "La secuencia",
+        "descripcion": "Repitan una secuencia de palabras o pasos en el orden exacto en que se dijeron.",
         "prompts": [
             "Repitan esta secuencia en orden: manzana, silla, luna, zapato.",
             "Repitan esta secuencia en orden: 7, azul, gato, lunes.",
@@ -1396,6 +1482,7 @@ JUEGOS = {
     "memoria_que_falta": {
         "categoria": "memoria",
         "titulo": "¿Qué falta?",
+        "descripcion": "Observen algo, como una lista o una escena, y adivinen qué elemento falta o cambió.",
         "prompts": [
             "Lista: manzana, pera, uva, mango. Ahora digan la misma lista de memoria... ¿falta alguna?",
             "Lista: perro, gato, loro, pez. Repítanla de memoria... ¿la dijeron completa?",
@@ -1412,6 +1499,7 @@ JUEGOS = {
     "memoria_el_eco": {
         "categoria": "memoria",
         "titulo": "El eco",
+        "descripcion": "Repitan exactamente lo último que dijo la persona anterior, palabra por palabra, antes de responder algo propio.",
         "prompts": [
             "Repite exactamente la última frase que dijo la persona antes que tú, luego da tu respuesta.",
             "Repite exactamente las últimas 5 palabras dichas en el grupo antes de hablar.",
@@ -1428,6 +1516,7 @@ JUEGOS = {
     "memoria_mapa_mental": {
         "categoria": "memoria",
         "titulo": "El mapa mental",
+        "descripcion": "Armen entre todos un mapa mental de ideas conectadas a partir de una palabra inicial.",
         "prompts": [
             "Conecta tu respuesta con algo que ya se mencionó antes en esta sesión de juegos.",
             "Menciona algo que te recuerde a una historia contada anteriormente hoy.",
@@ -1444,6 +1533,7 @@ JUEGOS = {
     "memoria_fotografica": {
         "categoria": "memoria",
         "titulo": "La memoria fotográfica",
+        "descripcion": "Observen algo por unos segundos y luego traten de recordar todos los detalles posibles, como si tuvieran memoria fotográfica.",
         "prompts": [
             "Describan de memoria lo que alguien llevaba puesto la última vez que se vieron en persona.",
             "Describan de memoria cómo era el lugar de la última reunión del grupo.",
@@ -1460,6 +1550,7 @@ JUEGOS = {
     "fe_preguntas_de_fe": {
         "categoria": "fe",
         "titulo": "Preguntas de fe",
+        "descripcion": "Preguntas para reflexionar en grupo sobre la fe y la relación con Dios, con total libertad para compartir.",
         "prompts": [
             "¿Qué momento sientes que Dios estuvo más presente en tu vida?",
             "¿Qué virtud te gustaría que Dios te ayudara a fortalecer?",
@@ -1476,6 +1567,7 @@ JUEGOS = {
     "fe_versiculo_sorpresa": {
         "categoria": "fe",
         "titulo": "El versículo sorpresa",
+        "descripcion": "Les toca un versículo o idea bíblica al azar para reflexionar y comentar entre todos.",
         "prompts": [
             "Reflexiona: 'Todo lo puedo en Cristo que me fortalece' (Filipenses 4:13). ¿Qué te dice hoy?",
             "Reflexiona: 'El amor es paciente, es bondadoso' (1 Corintios 13:4). ¿A quién te recuerda?",
@@ -1492,6 +1584,7 @@ JUEGOS = {
     "fe_gratitud_diaria": {
         "categoria": "fe",
         "titulo": "Gratitud diaria",
+        "descripcion": "Compartan algo por lo que están agradecidos con Dios en este momento de su vida.",
         "prompts": [
             "¿Por qué le darías gracias a Dios hoy, aunque sea algo pequeño?",
             "¿Qué bendición inesperada has recibido esta semana?",
@@ -1508,6 +1601,7 @@ JUEGOS = {
     "fe_parabola_moderna": {
         "categoria": "fe",
         "titulo": "La parábola moderna",
+        "descripcion": "Reinventen una parábola bíblica clásica llevándola a un contexto moderno y cotidiano.",
         "prompts": [
             "Reinterpreta la parábola del Hijo Pródigo en un contexto de hoy (familia, celular, redes).",
             "Reinterpreta la parábola del Buen Samaritano con una situación cotidiana actual.",
@@ -1524,6 +1618,7 @@ JUEGOS = {
     "fe_testimonio_breve": {
         "categoria": "fe",
         "titulo": "El testimonio breve",
+        "descripcion": "Compartan un testimonio breve de algo que Dios ha hecho en su vida.",
         "prompts": [
             "Comparte un momento en que sentiste una ayuda que no esperabas.",
             "Comparte un momento en que una oración se sintió respondida.",
@@ -1540,6 +1635,7 @@ JUEGOS = {
     "fe_oracion_una_frase": {
         "categoria": "fe",
         "titulo": "La oración en una frase",
+        "descripcion": "Resuman una oración o petición a Dios en una sola frase corta y sincera.",
         "prompts": [
             "Resume en una frase lo que orarías hoy por ti mismo.",
             "Resume en una frase lo que orarías hoy por tu familia.",
@@ -1556,6 +1652,7 @@ JUEGOS = {
     "fe_personaje_biblico": {
         "categoria": "fe",
         "titulo": "El personaje bíblico",
+        "descripcion": "Digan con qué personaje bíblico se identifican más y por qué.",
         "prompts": [
             "Responde como si fueras David antes de enfrentar a Goliat: ¿qué sientes?",
             "Responde como si fueras Noé construyendo el arca: ¿qué te dice la gente?",
@@ -1572,6 +1669,7 @@ JUEGOS = {
     "fe_virtud_del_dia": {
         "categoria": "fe",
         "titulo": "La virtud del día",
+        "descripcion": "Reflexionen sobre una virtud cristiana en particular y cómo la están viviendo, o no, en su día a día.",
         "prompts": [
             "Reflexiona sobre la paciencia: ¿cuándo la necesitas más en tu vida diaria?",
             "Reflexiona sobre la humildad: ¿cómo la practicas sin que se note demasiado?",
@@ -1588,6 +1686,7 @@ JUEGOS = {
     "fe_consejo_sabio": {
         "categoria": "fe",
         "titulo": "El consejo sabio",
+        "descripcion": "Compartan un consejo sabio, propio o de alguien más, inspirado en su fe.",
         "prompts": [
             "Comparte un consejo basado en la paciencia que le darías a alguien impaciente.",
             "Comparte un consejo basado en el perdón que le darías a alguien resentido.",
@@ -1604,6 +1703,7 @@ JUEGOS = {
     "fe_bendicion_compartida": {
         "categoria": "fe",
         "titulo": "La bendición compartida",
+        "descripcion": "Cierren compartiendo una bendición o palabra de ánimo para alguien más del grupo.",
         "prompts": [
             "Comparte una bendición corta para la persona a tu derecha (o la última que habló).",
             "Comparte un buen deseo para el año de alguien del grupo.",

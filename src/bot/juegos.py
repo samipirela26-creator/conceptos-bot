@@ -34,6 +34,16 @@ def _juegos_de_categoria(categoria_id: str) -> list[tuple[str, dict]]:
     ]
 
 
+def texto_juegos_de_categoria(categoria_id: str) -> str | None:
+    """Lista, en texto plano, el título y una breve explicación de cómo se
+    juega cada juego de la categoría -- para que el usuario sepa de qué
+    trata antes de elegir uno con los botones."""
+    juegos = _juegos_de_categoria(categoria_id)
+    if not juegos:
+        return None
+    return "\n\n".join(f"🔹 {juego['titulo']}: {juego['descripcion']}" for _, juego in juegos)
+
+
 def teclado_juegos_de_categoria(categoria_id: str) -> InlineKeyboardMarkup | None:
     juegos = _juegos_de_categoria(categoria_id)
     if not juegos:
@@ -61,7 +71,7 @@ def iniciar_juego(user_data: dict, juego_id: str) -> tuple[str, InlineKeyboardMa
     random.shuffle(pendientes)
     primero = pendientes.pop()
     user_data[_CLAVE_ESTADO] = {"juego_id": juego_id, "pendientes": pendientes}
-    mensaje = f"🦉 {juego['titulo']}\n\n{juego['prompts'][primero]}"
+    mensaje = f"🦉 {juego['titulo']}\n{juego['descripcion']}\n\n{juego['prompts'][primero]}"
     return mensaje, _teclado_en_juego()
 
 

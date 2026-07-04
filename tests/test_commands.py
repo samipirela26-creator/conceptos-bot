@@ -7,6 +7,7 @@ from src.bot.commands import (
     ahorcado_command, ahorcado_callback, juegos_command, juegos_callback,
 )
 from src.bot import texts
+from src.bot.juegos_data import JUEGOS
 from src.db import DBClient
 
 RESULTADO_RAE_CASA = {
@@ -259,6 +260,8 @@ async def test_juegos_callback_elige_categoria_muestra_juegos():
     await juegos_callback(update, context)
     mensaje, kwargs = update.callback_query.edit_message_text.call_args.args, update.callback_query.edit_message_text.call_args.kwargs
     assert "Fe y reflexión" in mensaje[0]
+    assert "Gratitud diaria" in mensaje[0]
+    assert JUEGOS["fe_gratitud_diaria"]["descripcion"] in mensaje[0]
     assert kwargs["reply_markup"] is not None
 
 
@@ -271,6 +274,8 @@ async def test_juegos_callback_inicia_juego():
     update.callback_query.edit_message_text = AsyncMock()
     await juegos_callback(update, context)
     update.callback_query.edit_message_text.assert_awaited_once()
+    mensaje = update.callback_query.edit_message_text.call_args.args[0]
+    assert JUEGOS["fe_gratitud_diaria"]["descripcion"] in mensaje
     assert "juegos" in context.user_data
 
 

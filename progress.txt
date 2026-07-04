@@ -157,3 +157,17 @@
   - Antes de escribir tests sobre un catálogo de contenido grande, correr un script de verificación rápido (conteo por categoría, prompts por juego, duplicados) para atrapar errores de autoría (ej. una categoría con 9 juegos en vez de 10, o un carácter extraño pegado a un prompt) antes de que se conviertan en fallos de test confusos.
   - callback_data "francis_juegos:cat:<categoria_id>" y similares se mantienen muy por debajo del límite de 64 bytes de Telegram incluso con los ids de juego más largos del catálogo -- no hace falta acortar ids.
 ---
+
+## [2026-07-04 19:02] - US-011
+- El usuario pidió que se explicara cada juego (no solo el título), para que quede claro cómo se juega antes de empezar.
+- Archivos cambiados:
+  - src/bot/juegos_data.py: agregado el campo "descripcion" (1 frase, mecánica del juego) a los 100 juegos, insertado con un script (no 100 Edit manuales) para evitar errores de transcripción -- verificado programáticamente que los 100 tienen descripcion no vacía.
+  - src/bot/juegos.py: nueva texto_juegos_de_categoria(categoria_id) que arma un listado "título: descripción" de todos los juegos de una categoría; iniciar_juego() ahora incluye la descripción en el mensaje (título + descripción + primer prompt).
+  - src/bot/commands.py: juegos_callback() rama "cat" ahora arma el mensaje con juegos.texto_juegos_de_categoria() antes de mostrar los botones, en vez del texto estático "Elija un juego:".
+  - tests/test_juegos.py: 3 tests nuevos (texto_juegos_de_categoria incluye título+descripción de cada juego de la categoría, devuelve None para categoría inexistente, catálogo completo tiene descripcion no vacía en los 100 juegos) + assert de descripcion agregado a test_iniciar_juego_arma_estado_y_teclado.
+  - tests/test_commands.py: import de JUEGOS agregado; asserts de descripción agregados a test_juegos_callback_elige_categoria_muestra_juegos y test_juegos_callback_inicia_juego.
+- Verificación: `.venv/bin/python -m pytest -q` -> 100 passed. `python -c "import src.main"` sin errores. Longitud de texto de categoría verificada (máx. ~1286 caracteres, muy por debajo del límite de 4096 de Telegram). Commit, push a GitHub y el timer de auto-actualización del Lenovo lo recogió solo.
+- **Learnings for future iterations:**
+  - Para insertar un campo nuevo en los 100 dicts de juegos_data.py, mejor un script Python con regex (inserta "descripcion" justo después de la línea "titulo" de cada bloque) que 100 llamadas de Edit -- más rápido y sin riesgo de errores de transcripción o de tocar el prompt equivocado.
+  - Antes de agregar texto libre a un mensaje editado de Telegram, conviene medir la longitud total esperada (aquí, listar 10 descripciones de una categoría) contra el límite de 4096 caracteres de edit_message_text -- en este caso sobra margen de sobra (~1300 de 4096).
+---

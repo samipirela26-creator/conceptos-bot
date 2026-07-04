@@ -188,10 +188,13 @@ async def juegos_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         categoria_id = partes[2]
         nombre = juegos.nombre_categoria(categoria_id)
         teclado = juegos.teclado_juegos_de_categoria(categoria_id)
-        if nombre is None or teclado is None:
+        descripciones = juegos.texto_juegos_de_categoria(categoria_id)
+        if nombre is None or teclado is None or descripciones is None:
             await query.edit_message_text(texts.JUEGOS_CATEGORIA_VACIA, reply_markup=juegos.teclado_categorias())
             return
-        await query.edit_message_text(f"🦉 {nombre}\n\nElija un juego:", reply_markup=teclado)
+        await query.edit_message_text(
+            f"🦉 {nombre}\n\n{descripciones}\n\nElija un juego:", reply_markup=teclado
+        )
     elif accion == "juego":
         juego_id = partes[2]
         resultado = juegos.iniciar_juego(context.user_data, juego_id)
