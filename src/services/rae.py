@@ -19,7 +19,10 @@ def buscar_rae(palabra: str, max_acepciones: int = 3) -> dict | None:
 
     Returns:
         None si la palabra no existe en la RAE.
-        dict {"palabra": str, "acepciones": [str, ...]} si existe.
+        dict {"palabra": str, "etimologia": str|None, "acepciones": [
+            {"texto": str, "etiqueta": str|None, "ejemplos": [str, ...],
+             "sinonimos": [str, ...]}, ...
+        ]} si existe.
 
     Raises:
         RuntimeError si hay un problema de red/servicio (no de "no encontrado").
@@ -42,8 +45,14 @@ def buscar_rae(palabra: str, max_acepciones: int = 3) -> dict | None:
     if not data:
         return None
 
+    etimologia = None
     acepciones = []
     for meaning in data.get("meanings", []):
+        if etimologia is None:
+            origen = (meaning.get("origin") or {}).get("raw")
+            if origen:
+                etimologia = origen.strip()
+
         for sense in meaning.get("senses", []):
             texto = (sense.get("description") or "").strip()
             if not texto:
@@ -53,7 +62,14 @@ def buscar_rae(palabra: str, max_acepciones: int = 3) -> dict | None:
             etiqueta = None
             if categoria == "noun" and genero:
                 etiqueta = "f." if genero == "feminine" else "m." if genero == "masculine" else None
-            acepciones.append({"texto": texto, "etiqueta": etiqueta})
+            ejemplos = [e.strip() for e in (sense.get("examples") or []) if e and e.strip()]
+            sinonimos = [s.strip() for s in (sense.get("synonyms") or []) if s and s.strip()]
+            acepciones.append({
+                "texto": texto,
+                "etiqueta": etiqueta,
+                "ejemplos": ejemplos,
+                "sinonimos": sinonimos,
+            })
             if len(acepciones) >= max_acepciones:
                 break
         if len(acepciones) >= max_acepciones:
@@ -62,4 +78,4 @@ def buscar_rae(palabra: str, max_acepciones: int = 3) -> dict | None:
     if not acepciones:
         return None
 
-    return {"palabra": data.get("word", palabra), "acepciones": acepciones}
+    return {"palabra": data.get("word", palabra), "etimologia": etimologia, "acepciones": acepciones}

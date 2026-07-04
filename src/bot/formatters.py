@@ -11,6 +11,9 @@ def _escapar(texto: str) -> str:
     return texto
 
 
+_MAX_SINONIMOS_MOSTRADOS = 5
+
+
 def _lista_acepciones(items: list[dict]) -> str:
     lineas = []
     for i, item in enumerate(items, start=1):
@@ -20,6 +23,14 @@ def _lista_acepciones(items: list[dict]) -> str:
             lineas.append(f"{i}. _{_escapar(etiqueta)}_ {texto}")
         else:
             lineas.append(f"{i}. {texto}")
+
+        for ejemplo in item.get("ejemplos") or []:
+            lineas.append(f"    💬 _{_escapar(ejemplo)}_")
+
+        sinonimos = item.get("sinonimos") or []
+        if sinonimos:
+            mostrados = ", ".join(_escapar(s) for s in sinonimos[:_MAX_SINONIMOS_MOSTRADOS])
+            lineas.append(f"    🔗 Sinónimos: {mostrados}")
     return "\n".join(lineas)
 
 
@@ -33,6 +44,9 @@ def formatear_resultado(palabra: str, resultado_rae: dict | None,
 
     if resultado_rae:
         partes.append("📖 *Real Academia Española:*")
+        etimologia = resultado_rae.get("etimologia")
+        if etimologia:
+            partes.append(f"_Origen: {_escapar(etimologia)}_")
         partes.append(_lista_acepciones(resultado_rae["acepciones"]))
     else:
         partes.append(texts.SOLO_WIKCIONARIO)

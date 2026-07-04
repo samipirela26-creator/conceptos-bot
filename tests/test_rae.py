@@ -11,11 +11,14 @@ RESPUESTA_CASA = {
         "word": "casa",
         "meanings": [
             {
+                "origin": {"raw": "Del lat. casa 'choza'."},
                 "senses": [
                     {
                         "description": "Edificio para habitar",
                         "category": "noun",
                         "gender": "feminine",
+                        "examples": ["Una casa de ocho plantas."],
+                        "synonyms": ["vivienda", "inmueble", "domicilio"],
                     },
                     {
                         "description": "Edificio de una o pocas plantas destinado a vivienda unifamiliar",
@@ -44,6 +47,16 @@ def test_buscar_rae_encontrada():
     assert len(resultado["acepciones"]) == 2
     assert resultado["acepciones"][0]["texto"] == "Edificio para habitar"
     assert resultado["acepciones"][0]["etiqueta"] == "f."
+
+
+def test_buscar_rae_incluye_etimologia_ejemplos_y_sinonimos():
+    with patch("urllib.request.urlopen", return_value=_fake_response(RESPUESTA_CASA)):
+        resultado = buscar_rae("casa")
+    assert resultado["etimologia"] == "Del lat. casa 'choza'."
+    assert resultado["acepciones"][0]["ejemplos"] == ["Una casa de ocho plantas."]
+    assert resultado["acepciones"][0]["sinonimos"] == ["vivienda", "inmueble", "domicilio"]
+    assert resultado["acepciones"][1]["ejemplos"] == []
+    assert resultado["acepciones"][1]["sinonimos"] == []
 
 
 def test_buscar_rae_no_encontrada_404():

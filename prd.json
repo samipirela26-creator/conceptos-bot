@@ -15,7 +15,7 @@
       "priority": 2,
       "title": "Exponer sinónimos, etimología y ejemplos de la RAE",
       "description": "src/services/rae.py ya descarta datos que rae-api.com sí entrega (synonyms/synonyms_v2, examples, origin.raw). Extenderlo para incluir estos campos en el dict devuelto, y que formatters.py los muestre de forma opcional (solo si existen) debajo de cada acepción, sin alterar el texto original de la definición.",
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-003",

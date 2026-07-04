@@ -7,6 +7,7 @@
 - concept_extractor.py: cualquier prefijo de pregunta debe permitir opcionalmente un artículo (_ARTICULO = el/la/los/las/un/una/unos/unas) antes de la palabra, si no el heurístico devuelve "la palabra" en vez de "palabra".
 - Reinicio del proceso en vivo: usar `pgrep -f "conceptos-bot.*run.py" -a` para encontrar el PID hijo real de python (no el wrapper de bash), matar con SIGTERM, esperar unos segundos, confirmar con pgrep que quedó en cero antes de arrancar una instancia nueva. Si SIGTERM no limpia el proceso en pocos segundos, usar SIGKILL.
 - Tests: pytest con mocks de urllib.request.urlopen para los clientes de servicios (sin red real). Correr con `.venv/bin/python -m pytest -q` desde la raíz del proyecto.
+- rae-api.com trae más datos de los que se muestran por defecto: cada "sense" tiene examples (list[str]) y synonyms (list[str]); cada "meaning" tiene origin.raw (etimología). src/services/rae.py ya los expone en el dict de retorno (etimologia a nivel raíz, ejemplos/sinonimos por acepción) -- usar .get(...) con default [] al leerlos, porque no siempre están presentes.
 
 ## [2026-07-03 23:36] - US-001
 - Implementado el "toque de fe" al final de cada respuesta de concepto y el flujo de dos mensajes ("trabajando" antes de consultar RAE/Wikcionario, resultado formateado después).
@@ -20,4 +21,17 @@
   - El texto de "toque de fe" se concatena directo (partes.strip() + texts.toque_de_fe()) porque la lista ya incluye su propio "\n\n" al inicio -- si se edita TOQUE_DE_FE, mantener ese prefijo.
   - El mensaje de "trabajando" se envía justo después de descartar concepto is None (o sea, ya se sabe que hay una palabra válida que buscar) y antes de los try/except de red -- es el punto correcto para cubrir la latencia real de las llamadas a RAE/Wikcionario.
   - No hace falta un test_texts.py separado por ahora -- test_formatear_incluye_toque_de_fe ya cubre indirectamente que toque_de_fe() funciona y que su salida aparece en el mensaje final.
+---
+
+## [2026-07-03 23:45] - US-002
+- Implementada la extracción y el despliegue de etimología, ejemplos de uso y sinónimos que rae-api.com ya entrega pero que antes se descartaban.
+- Archivos cambiados:
+  - src/services/rae.py: buscar_rae() ahora devuelve "etimologia" (str|None, tomada de meanings[0].origin.raw) a nivel raíz, y cada acepción incluye "ejemplos" (list[str]) y "sinonimos" (list[str]), tomados de sense["examples"]/sense["synonyms"].
+  - src/bot/formatters.py: _lista_acepciones() ahora agrega sub-líneas con 💬 (ejemplo) y 🔗 (hasta 5 sinónimos) debajo de cada acepción cuando existen; formatear_resultado() agrega una línea "_Origen: ..._" con la etimología si está presente. Todo opcional -- no rompe cuando faltan estos campos (Wikcionario no los tiene).
+  - tests/test_rae.py: fixture RESPUESTA_CASA ahora incluye origin/examples/synonyms; nuevo test test_buscar_rae_incluye_etimologia_ejemplos_y_sinonimos.
+  - tests/test_formatters.py: nueva fixture RAE_CASA_ENRIQUECIDA y tests test_formatear_incluye_etimologia_ejemplos_y_sinonimos / test_formatear_sin_etimologia_ni_ejemplos_no_falla.
+- Verificación: `.venv/bin/python -m pytest -q` -> 22 passed. Probado también en vivo contra rae-api.com real (palabra "casa") para confirmar que el mensaje se ve bien formateado en Markdown.
+- **Learnings for future iterations:**
+  - Wikcionario (_lista_acepciones también la usa para sus definiciones) nunca tendrá "ejemplos"/"sinonimos" -- por eso _lista_acepciones usa item.get(...) or [] en vez de asumir que existen esas claves.
+  - El límite de sinónimos mostrados es _MAX_SINONIMOS_MOSTRADOS = 5 en formatters.py, para no saturar el mensaje cuando la RAE trae listas largas (ej. "casa" trae 12 sinónimos en su primera acepción).
 ---
