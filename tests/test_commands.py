@@ -4,6 +4,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from src.bot.commands import (
     menu_command, menu_callback, favoritos_command, historial_command, favorito_callback,
     palabra_del_dia_command, suscribir_palabra_dia_command, cancelar_palabra_dia_command,
+    ahorcado_command, ahorcado_callback,
 )
 from src.bot import texts
 from src.db import DBClient
@@ -180,3 +181,58 @@ async def test_menu_callback_desactiva_palabra_dia():
     await menu_callback(update, _context_con_db(db))
     assert db.esta_suscrito_palabra_dia(1) is False
     update.callback_query.message.reply_text.assert_awaited_once_with(texts.PALABRA_DIA_DESUSCRITO)
+
+
+def _context_con_user_data(user_data=None):
+    context = MagicMock()
+    context.user_data = user_data if user_data is not None else {}
+    return context
+
+
+@pytest.mark.asyncio
+async def test_ahorcado_command_inicia_partida():
+    update = MagicMock()
+    update.message.reply_text = AsyncMock()
+    context = _context_con_user_data()
+    await ahorcado_command(update, context)
+    update.message.reply_text.assert_awaited_once()
+    assert "ahorcado" in context.user_data
+    mensaje = update.message.reply_text.call_args.args[0]
+    assert texts.AHORCADO_INTRO in mensaje
+
+
+@pytest.mark.asyncio
+async def test_ahorcado_callback_letra_correcta_edita_mensaje():
+    context = _context_con_user_data({"ahorcado": {"palabra": "casa", "letras_intentadas": set(), "errores": 0}})
+    update = MagicMock()
+    update.callback_query.answer = AsyncMock()
+    update.callback_query.data = "francis_ahorcado:letra:C"
+    update.callback_query.edit_message_text = AsyncMock()
+    await ahorcado_callback(update, context)
+    update.callback_query.edit_message_text.assert_awaited_once()
+    assert context.user_data["ahorcado"]["letras_intentadas"] == {"C"}
+
+
+@pytest.mark.asyncio
+async def test_ahorcado_callback_pista_usa_rae():
+    context = _context_con_user_data({"ahorcado": {"palabra": "casa", "letras_intentadas": set(), "errores": 0}})
+    update = MagicMock()
+    update.callback_query.answer = AsyncMock()
+    update.callback_query.data = "francis_ahorcado:pista"
+    update.callback_query.message.reply_text = AsyncMock()
+    with patch("src.bot.commands.obtener_pista", return_value="Edificio para habitar"):
+        await ahorcado_callback(update, context)
+    update.callback_query.message.reply_text.assert_awaited_once_with("Edificio para habitar")
+
+
+@pytest.mark.asyncio
+async def test_ahorcado_callback_rendirse_revela_palabra():
+    context = _context_con_user_data({"ahorcado": {"palabra": "casa", "letras_intentadas": set(), "errores": 0}})
+    update = MagicMock()
+    update.callback_query.answer = AsyncMock()
+    update.callback_query.data = "francis_ahorcado:rendirse"
+    update.callback_query.edit_message_text = AsyncMock()
+    await ahorcado_callback(update, context)
+    mensaje = update.callback_query.edit_message_text.call_args.args[0]
+    assert "casa" in mensaje.lower()
+    assert "ahorcado" not in context.user_data

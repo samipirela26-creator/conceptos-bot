@@ -45,6 +45,17 @@ def _buscar_concepto(concepto: str) -> tuple[dict | None, dict | None, bool]:
     return resultado_rae, resultado_wikcionario, hubo_error_servicio
 
 
+def obtener_pista(palabra: str) -> str | None:
+    """Primera definición real (RAE, o si no, Wikcionario) para usar como
+    pista del ahorcado -- nunca se inventa, igual que el resto del bot."""
+    resultado_rae, resultado_wikcionario, _ = _buscar_concepto(palabra)
+    if resultado_rae and resultado_rae.get("acepciones"):
+        return resultado_rae["acepciones"][0]["texto"]
+    if resultado_wikcionario and resultado_wikcionario.get("definiciones"):
+        return resultado_wikcionario["definiciones"][0]["texto"]
+    return None
+
+
 def buscar_palabra_del_dia() -> tuple[str, dict | None, dict | None] | None:
     """Elige una palabra al azar de texts.PALABRAS_DEL_DIA y la busca en
     RAE/Wikcionario, reintentando con otra palabra si alguna no aparece en

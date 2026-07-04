@@ -1,9 +1,9 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
-from src.bot import texts
+from src.bot import ahorcado, texts
 from src.bot.formatters import formatear_resultado
-from src.bot.handlers import buscar_palabra_del_dia
+from src.bot.handlers import buscar_palabra_del_dia, obtener_pista
 
 
 def _menu_keyboard(suscrito_palabra_dia: bool) -> InlineKeyboardMarkup:
@@ -143,3 +143,30 @@ async def cancelar_palabra_dia_command(update: Update, context: ContextTypes.DEF
         return
     db.desuscribir_palabra_dia(update.effective_user.id)
     await update.message.reply_text(texts.PALABRA_DIA_DESUSCRITO)
+
+
+async def ahorcado_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    mensaje, teclado = ahorcado.iniciar_juego(context.user_data)
+    await update.message.reply_text(mensaje, reply_markup=teclado)
+
+
+async def ahorcado_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    partes = (query.data or "").split(":", 2)
+    accion = partes[1] if len(partes) > 1 else ""
+
+    if accion == "letra":
+        letra = partes[2]
+        mensaje, teclado, terminado = ahorcado.procesar_letra(context.user_data, letra)
+        await query.edit_message_text(mensaje, reply_markup=teclado)
+    elif accion == "pista":
+        palabra = ahorcado.palabra_actual(context.user_data)
+        if palabra is None:
+            await query.message.reply_text(texts.AHORCADO_SIN_JUEGO)
+            return
+        pista = obtener_pista(palabra)
+        await query.message.reply_text(pista or texts.AHORCADO_SIN_PISTA)
+    elif accion == "rendirse":
+        mensaje = ahorcado.rendirse(context.user_data)
+        await query.edit_message_text(mensaje)

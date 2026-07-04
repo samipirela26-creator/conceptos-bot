@@ -58,6 +58,13 @@
       "title": "Suscripción opt-in a la palabra del día",
       "description": "El envío diario automático de la palabra del día (US-007) debe ser opt-in: por defecto ningún usuario la recibe. Agregar comandos /suscribirpalabradeldia y /cancelarpalabradeldia, y un botón en /menu que alterne el estado (activar/desactivar) según la suscripción actual del usuario. El comando manual /palabradeldia no se ve afectado -- sigue funcionando para cualquiera en cualquier momento.",
       "passes": true
+    },
+    {
+      "id": "US-009",
+      "priority": 9,
+      "title": "Juego del ahorcado",
+      "description": "Agregar comando /ahorcado que inicia una partida de ahorcado jugada con botones de teclado inline (no texto libre), usando una lista nueva y más amplia de palabras (texts.PALABRAS_AHORCADO, separada de PALABRAS_DEL_DIA). El estado de la partida vive en context.user_data (no en SQLite, por ser efímero). Incluye botón opcional de pista, que muestra la primera definición real de RAE o, si no hay, de Wikcionario -- nunca contenido inventado -- y botón de rendirse que revela la palabra.",
+      "passes": true
     }
   ]
 }

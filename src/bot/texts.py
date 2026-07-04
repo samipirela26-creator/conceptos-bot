@@ -111,6 +111,47 @@ PALABRA_DIA_DESUSCRITO = (
     "aquí, si alguna vez la quiere pedir con /palabradeldia."
 )
 
+# Palabras curadas para el juego del ahorcado -- lista propia, más extensa
+# que PALABRAS_DEL_DIA, para que el juego no se sienta repetitivo. Se
+# guardan con su ortografía correcta (tildes, ñ) porque también se usan
+# para pedir la pista real a RAE/Wikcionario.
+PALABRAS_AHORCADO = [
+    "biblioteca", "murciélago", "cocodrilo", "jardín", "montaña", "estrella",
+    "camino", "puente", "espejo", "relámpago", "tormenta", "desierto",
+    "cascada", "horizonte", "sendero", "linterna", "brújula", "pergamino",
+    "candelabro", "escalera", "campanario", "laberinto", "faro", "vitral",
+    "manuscrito", "telaraña", "girasol", "colibrí", "mariposa", "delfín",
+    "tiburón", "elefante", "jirafa", "leopardo", "águila", "serpiente",
+    "tortuga", "ballena", "pingüino", "castillo", "torre", "fortaleza",
+    "cascabel", "trueno", "arcoíris", "cometa", "eclipse", "constelación",
+    "océano", "volcán", "biblia", "santuario", "oración", "milagro",
+    "peregrino", "monasterio", "salterio", "profeta",
+]
+
+AHORCADO_INTRO = (
+    "🦉 Ahorquemos una palabra, ¿le parece? Elija sus letras con calma -- "
+    "y si se atasca, ahí tiene el botón de pista."
+)
+
+AHORCADO_GANADO = [
+    "🦉 ¡Justo a tiempo! La adivinó sin agotar mi paciencia. Un placer jugar con usted.",
+    "🦉 Excelente. Sabía que sus letras y su cabeza harían buen equipo.",
+    "🦉 Bravo. Otra palabra rescatada de mis anaqueles gracias a usted.",
+]
+
+AHORCADO_PERDIDO = [
+    "🦉 Ay, esta vez el ahorcado ganó la partida. No se aflija, la palabra era \"{palabra}\".",
+    "🦉 Se nos escapó esta ronda -- la palabra era \"{palabra}\". ¿Probamos otra?",
+]
+
+AHORCADO_SIN_PISTA = "🦉 Lo lamento, no tengo una pista para esta palabra en mis fuentes."
+
+AHORCADO_SIN_JUEGO = (
+    "🦉 No hay ninguna partida en curso. Escriba /ahorcado para empezar una."
+)
+
+AHORCADO_RENDIRSE = "🦉 Como guste. La palabra era \"{palabra}\". Cuando quiera, jugamos de nuevo."
+
 
 def intro_resultado() -> str:
     return random.choice(INTROS_RESULTADO)
@@ -130,3 +171,11 @@ def trabajando() -> str:
 
 def toque_de_fe() -> str:
     return random.choice(TOQUE_DE_FE)
+
+
+def ahorcado_ganado() -> str:
+    return random.choice(AHORCADO_GANADO)
+
+
+def ahorcado_perdido(palabra: str) -> str:
+    return random.choice(AHORCADO_PERDIDO).format(palabra=palabra)

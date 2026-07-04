@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from src.bot import texts
-from src.bot.handlers import handle_message, inline_query_handler, buscar_palabra_del_dia
+from src.bot.handlers import handle_message, inline_query_handler, buscar_palabra_del_dia, obtener_pista
 from src.db import DBClient
 
 RESULTADO_RAE_CASA = {
@@ -98,3 +98,22 @@ def test_buscar_palabra_del_dia_ninguna_encontrada_devuelve_none():
     with patch("src.bot.handlers.buscar_rae", return_value=None), \
          patch("src.bot.handlers.buscar_wikcionario", return_value=None):
         assert buscar_palabra_del_dia() is None
+
+
+def test_obtener_pista_usa_primera_acepcion_de_rae():
+    with patch("src.bot.handlers.buscar_rae", return_value=RESULTADO_RAE_CASA), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=None):
+        assert obtener_pista("casa") == "Edificio para habitar"
+
+
+def test_obtener_pista_usa_wikcionario_si_no_hay_rae():
+    resultado_wikcionario = {"palabra": "casa", "definiciones": [{"texto": "Vivienda", "etiqueta": None}]}
+    with patch("src.bot.handlers.buscar_rae", return_value=None), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=resultado_wikcionario):
+        assert obtener_pista("casa") == "Vivienda"
+
+
+def test_obtener_pista_sin_resultados_devuelve_none():
+    with patch("src.bot.handlers.buscar_rae", return_value=None), \
+         patch("src.bot.handlers.buscar_wikcionario", return_value=None):
+        assert obtener_pista("asdfqwerty123") is None

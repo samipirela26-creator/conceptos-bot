@@ -118,3 +118,22 @@
   - Cuando un dato deja de tener consumidores (como pasó con `usuarios` al volverse opt-in la palabra del día), conviene eliminarlo por completo en vez de dejarlo "por si acaso" -- se verificó con grep que no quedaran referencias sueltas antes de borrar la tabla y sus métodos.
   - Patrón para features opt-in con toggle doble (comando + botón de menú): la función que construye el teclado (_menu_keyboard) recibe el estado actual como parámetro explícito en vez de consultarlo ella misma, así queda testeable sin mockear la DB; quien la llama (menu_command, menu_callback) es responsable de consultar el estado primero.
 ---
+
+## [2026-07-04 01:10] - US-009
+- El usuario pidió agregar el juego del ahorcado. Tras aclarar detalles: se juega con botones de teclado inline (no texto libre), usa una lista nueva y más grande de palabras (separada de la palabra del día), e incluye un botón de pista opcional que muestra una definición real de RAE/Wikcionario (nunca inventada), consistente con la regla central del bot.
+- Archivos cambiados:
+  - src/bot/ahorcado.py (nuevo): lógica pura del juego -- iniciar_juego, procesar_letra, rendirse, palabra_actual, y helpers privados (_normalizar, _palabra_mostrada, _teclado, _mensaje_estado, _gano). Estado de cada partida vive en user_data["ahorcado"] (dict con palabra/letras_intentadas/errores), no en SQLite, por ser efímero y no necesitar sobrevivir reinicios ni ser consultable.
+  - src/bot/texts.py: nuevos PALABRAS_AHORCADO (lista propia, ~58 palabras en minúscula, con tildes/ñ reales para que la pista pueda consultar RAE correctamente), AHORCADO_INTRO, AHORCADO_GANADO/AHORCADO_PERDIDO (rotativos) + ahorcado_ganado()/ahorcado_perdido(), AHORCADO_SIN_PISTA, AHORCADO_SIN_JUEGO, AHORCADO_RENDIRSE.
+  - src/bot/handlers.py: nueva obtener_pista(palabra) que reutiliza _buscar_concepto() (mismo helper que ya usan handle_message/inline_query_handler/buscar_palabra_del_dia) y devuelve la primera acepción de RAE o, si no hay, la primera definición de Wikcionario.
+  - src/bot/commands.py: nuevos ahorcado_command() (inicia partida) y ahorcado_callback() (maneja letra/pista/rendirse vía callback_data "francis_ahorcado:...").
+  - src/main.py: registrados CommandHandler("ahorcado", ahorcado_command), CallbackQueryHandler(ahorcado_callback, pattern=r"^francis_ahorcado:"), y "ahorcado" agregado a COMANDOS_PUBLICOS.
+  - tests/test_ahorcado.py (nuevo): 13 tests de la lógica pura del juego.
+  - tests/test_commands.py, tests/test_handlers.py: tests de ahorcado_command/ahorcado_callback y de obtener_pista.
+  - prd.json: agregada la historia US-009 (surgió como pedido nuevo del usuario, no estaba en el backlog original).
+- Verificación: `.venv/bin/python -m pytest -q` -> 79 passed. `python -c "import src.main"` sin errores. Proceso en vivo reiniciado con el procedimiento seguro habitual.
+- **Learnings for future iterations:**
+  - PALABRAS_AHORCADO se guarda en minúscula -- _palabra_mostrada() revela el carácter tal cual está almacenado (minúscula), NO lo pone en mayúscula al descubrirlo. Cualquier test nuevo sobre el mensaje mostrado debe esperar minúsculas, aunque las letras del teclado/adivinadas se comparen y muestren en mayúscula.
+  - _normalizar() usa una tabla de traducción de vocales con tilde -> sin tilde (str.maketrans) para que adivinar sin tilde cuente como acierto, pero deja Ñ/ñ intacta a propósito -- la eñe es una letra distinta en el teclado, no una variante de N.
+  - Se mantiene la palabra con su ortografía real (con tildes) en la lista, en vez de una versión simplificada, específicamente porque obtener_pista() necesita consultar RAE con la ortografía correcta para encontrar resultados.
+  - Para simular context.user_data en tests hace falta un dict real (helper _context_con_user_data), no un MagicMock puro -- el módulo ahorcado.py usa operadores de dict (in, [], del) que MagicMock no emula correctamente.
+---
