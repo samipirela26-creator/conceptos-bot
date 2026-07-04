@@ -1,0 +1,56 @@
+{
+  "projectName": "conceptos-bot (Francis la Búho)",
+  "description": "Bot de Telegram que responde definiciones de conceptos/palabras combinando dos fuentes reales -- Real Academia Española (rae-api.com) y Wikcionario (es.wiktionary.org) -- sin generar ni reescribir contenido con IA. Gemini se usa exclusivamente para entender qué palabra pide el usuario en mensajes libres, nunca para redactar la definición. Persona: Francis, una dama erudita, refinada y cristocéntrica que reside en su biblioteca dentro de 'la Lenovo'. Ejecutado en modo Ralph -- directamente por Claude dentro de esta sesión, sin subproceso CLI anidado, para mantener control y no arriesgar el manejo de secretos reales (token de Telegram, API key de Gemini).",
+  "branchName": "master",
+  "stories": [
+    {
+      "id": "US-001",
+      "priority": 1,
+      "title": "Toque de fe y flujo de dos mensajes",
+      "description": "Cada respuesta de concepto termina con una breve nota de fe cristocéntrica (rotativa, en texts.TOQUE_DE_FE), y al recibir una consulta válida Francis responde primero con un mensaje breve de 'trabajando' (texts.TRABAJANDO) antes de enviar el resultado formateado, para que el usuario sepa que ya está siendo atendido mientras se consultan RAE/Wikcionario.",
+      "passes": true
+    },
+    {
+      "id": "US-002",
+      "priority": 2,
+      "title": "Exponer sinónimos, etimología y ejemplos de la RAE",
+      "description": "src/services/rae.py ya descarta datos que rae-api.com sí entrega (synonyms/synonyms_v2, examples, origin.raw). Extenderlo para incluir estos campos en el dict devuelto, y que formatters.py los muestre de forma opcional (solo si existen) debajo de cada acepción, sin alterar el texto original de la definición.",
+      "passes": false
+    },
+    {
+      "id": "US-003",
+      "priority": 3,
+      "title": "Comando /menu con botones",
+      "description": "Agregar comando /menu en src/bot/commands.py con un InlineKeyboardMarkup (mirroring el patrón de menu_command/menu_callback de gastos-bot) que permita acceder a /help, favoritos e historial desde botones, y registrar el CallbackQueryHandler en src/main.py.",
+      "passes": false
+    },
+    {
+      "id": "US-004",
+      "priority": 4,
+      "title": "Modo inline",
+      "description": "Agregar un InlineQueryHandler en src/main.py que permita usar '@francislabuhobibliotecaria_bot palabra' desde cualquier chat de Telegram, reutilizando la misma lógica de búsqueda (RAE + Wikcionario) y formateo ya existente.",
+      "passes": false
+    },
+    {
+      "id": "US-005",
+      "priority": 5,
+      "title": "Favoritos con SQLite",
+      "description": "Crear src/db.py (siguiendo el patrón de gastos-bot/db.py) con una tabla favoritos (user_id, palabra, fecha). Agregar comando /favoritos para listar, y un botón o comando para guardar/quitar la última palabra consultada.",
+      "passes": false
+    },
+    {
+      "id": "US-006",
+      "priority": 6,
+      "title": "Historial de búsquedas",
+      "description": "Usando la misma base SQLite de US-005, registrar cada búsqueda exitosa (user_id, palabra, fecha) y agregar comando /historial que muestre las últimas 10 palabras consultadas por ese usuario.",
+      "passes": false
+    },
+    {
+      "id": "US-007",
+      "priority": 7,
+      "title": "Palabra del día",
+      "description": "Agregar un JobQueue diario (mirroring el patrón usado en asistente-bot) que elija una palabra interesante y la envíe automáticamente a los usuarios autorizados, más un comando manual /palabradeldia para pedirla en cualquier momento.",
+      "passes": false
+    }
+  ]
+}

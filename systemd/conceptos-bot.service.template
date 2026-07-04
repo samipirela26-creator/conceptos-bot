@@ -1,0 +1,20 @@
+[Unit]
+Description=Bot de Telegram de definiciones (Francis la Búho)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/ruta/a/conceptos-bot
+ExecStart=/ruta/a/conceptos-bot/.venv/bin/python run.py
+EnvironmentFile=/ruta/a/conceptos-bot/.env
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+Nice=10
+CPUWeight=20
+MemoryMax=300M
+NoNewPrivileges=true
+
+[Install]
+WantedBy=default.target

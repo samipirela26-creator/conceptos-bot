@@ -1,0 +1,23 @@
+## Codebase Patterns
+- El contenido de la definición (RAE/Wikcionario) SIEMPRE sale tal cual de la fuente real -- Gemini solo se usa en src/llm/gemini_client.py para extraer qué palabra pidió el usuario, nunca para redactar/reescribir la definición.
+- Frases de personalidad (saludos, "trabajando", notas de fe) viven en src/bot/texts.py como listas rotativas (random.choice) + una función helper por lista. No mezclar este texto con el contenido real de la definición en formatters.py.
+- formatters.py arma el mensaje final; siempre termina con texts.toque_de_fe() (US-001) -- si se agregan nuevas secciones (sinónimos, etimología, etc.) deben ir ANTES de esa línea final.
+- Flujo de handlers.py: 1) extraer_heuristico() sin IA -> 2) si falla, Gemini SOLO para extraer el concepto -> 3) enviar texts.trabajando() como primer mensaje -> 4) consultar RAE + Wikcionario -> 5) formatear y enviar el resultado como segundo mensaje.
+- Wikcionario: usar [ \t]* (no \s*) entre el número de definición y su etiqueta en la regex de src/services/wikcionario.py -- \s* también matchea saltos de línea y rompe el parseo cuando no hay etiqueta en la misma línea.
+- concept_extractor.py: cualquier prefijo de pregunta debe permitir opcionalmente un artículo (_ARTICULO = el/la/los/las/un/una/unos/unas) antes de la palabra, si no el heurístico devuelve "la palabra" en vez de "palabra".
+- Reinicio del proceso en vivo: usar `pgrep -f "conceptos-bot.*run.py" -a` para encontrar el PID hijo real de python (no el wrapper de bash), matar con SIGTERM, esperar unos segundos, confirmar con pgrep que quedó en cero antes de arrancar una instancia nueva. Si SIGTERM no limpia el proceso en pocos segundos, usar SIGKILL.
+- Tests: pytest con mocks de urllib.request.urlopen para los clientes de servicios (sin red real). Correr con `.venv/bin/python -m pytest -q` desde la raíz del proyecto.
+
+## [2026-07-03 23:36] - US-001
+- Implementado el "toque de fe" al final de cada respuesta de concepto y el flujo de dos mensajes ("trabajando" antes de consultar RAE/Wikcionario, resultado formateado después).
+- Archivos cambiados:
+  - src/bot/texts.py: agregadas listas TRABAJANDO y TOQUE_DE_FE (rotativas) + funciones trabajando() y toque_de_fe().
+  - src/bot/formatters.py: formatear_resultado() ahora agrega texts.toque_de_fe() al final del mensaje.
+  - src/bot/handlers.py: handle_message() envía texts.trabajando() como mensaje inmediato apenas se confirma un concepto válido, antes de las consultas de red a RAE/Wikcionario.
+  - tests/test_formatters.py: nuevo test test_formatear_incluye_toque_de_fe verificando que el mensaje final contiene una de las notas de fe.
+- Verificación: `.venv/bin/python -m pytest -q` -> 19 passed. Proceso en vivo reiniciado (instancia anterior terminada con SIGTERM, cero instancias confirmadas con pgrep, nueva instancia arrancada y verificada en logs sin conflictos de getUpdates).
+- **Learnings for future iterations:**
+  - El texto de "toque de fe" se concatena directo (partes.strip() + texts.toque_de_fe()) porque la lista ya incluye su propio "\n\n" al inicio -- si se edita TOQUE_DE_FE, mantener ese prefijo.
+  - El mensaje de "trabajando" se envía justo después de descartar concepto is None (o sea, ya se sabe que hay una palabra válida que buscar) y antes de los try/except de red -- es el punto correcto para cubrir la latencia real de las llamadas a RAE/Wikcionario.
+  - No hace falta un test_texts.py separado por ahora -- test_formatear_incluye_toque_de_fe ya cubre indirectamente que toque_de_fe() funciona y que su salida aparece en el mensaje final.
+---
