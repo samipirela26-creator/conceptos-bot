@@ -6,17 +6,20 @@ from src.bot.formatters import formatear_resultado
 from src.bot.handlers import buscar_palabra_del_dia
 
 
-def _menu_keyboard() -> InlineKeyboardMarkup:
+def _menu_keyboard(suscrito_palabra_dia: bool) -> InlineKeyboardMarkup:
+    boton_palabra_dia = (
+        InlineKeyboardButton("🔕 Desactivar palabra del día", callback_data="francis_menu:palabradia_off")
+        if suscrito_palabra_dia
+        else InlineKeyboardButton("🔔 Activar palabra del día", callback_data="francis_menu:palabradia_on")
+    )
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("📖 Cómo consultarme", callback_data="francis_menu:ayuda")],
         [InlineKeyboardButton("🦉 Acerca de Francis", callback_data="francis_menu:acerca")],
+        [boton_palabra_dia],
     ])
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    db = context.bot_data.get("db")
-    if db is not None:
-        db.registrar_usuario(update.effective_user.id)
     await update.message.reply_text(texts.BIENVENIDA)
 
 
@@ -25,17 +28,31 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
 
 async def menu_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("🦉 ¿En qué puedo servirle?", reply_markup=_menu_keyboard())
+    db = context.bot_data.get("db")
+    suscrito = db.esta_suscrito_palabra_dia(update.effective_user.id) if db is not None else False
+    await update.message.reply_text("🦉 ¿En qué puedo servirle?", reply_markup=_menu_keyboard(suscrito))
 
 
 async def menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     await query.answer()
+    db = context.bot_data.get("db")
     accion = (query.data or "").split(":", 1)[-1]
     if accion == "ayuda":
         await query.message.reply_text(texts.AYUDA)
     elif accion == "acerca":
         await query.message.reply_text(texts.ACERCA_DE)
+    elif accion in ("palabradia_on", "palabradia_off") and db is not None:
+        user_id = update.effective_user.id
+        if accion == "palabradia_on":
+            db.suscribir_palabra_dia(user_id)
+        else:
+            db.desuscribir_palabra_dia(user_id)
+        suscrito = db.esta_suscrito_palabra_dia(user_id)
+        await query.edit_message_reply_markup(reply_markup=_menu_keyboard(suscrito))
+        await query.message.reply_text(
+            texts.PALABRA_DIA_SUSCRITO if suscrito else texts.PALABRA_DIA_DESUSCRITO
+        )
 
 
 def _favoritos_keyboard(favoritos: list[str]) -> InlineKeyboardMarkup:
@@ -110,3 +127,19 @@ async def palabra_del_dia_command(update: Update, context: ContextTypes.DEFAULT_
     await update.message.reply_text(
         f"{texts.PALABRA_DEL_DIA_INTRO}\n\n{mensaje}", parse_mode="Markdown"
     )
+
+
+async def suscribir_palabra_dia_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    db = context.bot_data.get("db")
+    if db is None:
+        return
+    db.suscribir_palabra_dia(update.effective_user.id)
+    await update.message.reply_text(texts.PALABRA_DIA_SUSCRITO)
+
+
+async def cancelar_palabra_dia_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    db = context.bot_data.get("db")
+    if db is None:
+        return
+    db.desuscribir_palabra_dia(update.effective_user.id)
+    await update.message.reply_text(texts.PALABRA_DIA_DESUSCRITO)

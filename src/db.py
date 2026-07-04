@@ -27,7 +27,7 @@ class DBClient:
             )
         """)
         self._conn.execute("""
-            CREATE TABLE IF NOT EXISTS usuarios (
+            CREATE TABLE IF NOT EXISTS suscriptores_palabra_dia (
                 user_id INTEGER PRIMARY KEY
             )
         """)
@@ -88,15 +88,24 @@ class DBClient:
         )
         return [fila[0] for fila in cursor.fetchall()]
 
-    def registrar_usuario(self, user_id: int) -> None:
-        """Registra que este user_id ya interactuó con el bot -- se usa para
-        saber a quién enviarle la 'palabra del día' cuando el registro es
-        abierto (ALLOWED_USER_IDS vacío) y no hay una lista fija de destinatarios."""
+    def suscribir_palabra_dia(self, user_id: int) -> None:
         self._conn.execute(
-            "INSERT OR IGNORE INTO usuarios (user_id) VALUES (?)", (user_id,)
+            "INSERT OR IGNORE INTO suscriptores_palabra_dia (user_id) VALUES (?)", (user_id,)
         )
         self._conn.commit()
 
-    def listar_usuarios(self) -> list[int]:
-        cursor = self._conn.execute("SELECT user_id FROM usuarios")
+    def desuscribir_palabra_dia(self, user_id: int) -> None:
+        self._conn.execute(
+            "DELETE FROM suscriptores_palabra_dia WHERE user_id = ?", (user_id,)
+        )
+        self._conn.commit()
+
+    def esta_suscrito_palabra_dia(self, user_id: int) -> bool:
+        cursor = self._conn.execute(
+            "SELECT 1 FROM suscriptores_palabra_dia WHERE user_id = ?", (user_id,)
+        )
+        return cursor.fetchone() is not None
+
+    def listar_suscriptores_palabra_dia(self) -> list[int]:
+        cursor = self._conn.execute("SELECT user_id FROM suscriptores_palabra_dia")
         return [fila[0] for fila in cursor.fetchall()]

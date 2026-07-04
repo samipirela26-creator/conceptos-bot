@@ -63,3 +63,27 @@ def test_historial_respeta_limite():
     for palabra in ["a", "b", "c", "d"]:
         db.registrar_historial(1, palabra)
     assert db.listar_historial(1, limite=2) == ["d", "c"]
+
+
+def test_suscripcion_palabra_dia_es_opt_in_por_defecto():
+    db = _db()
+    assert db.esta_suscrito_palabra_dia(1) is False
+    assert db.listar_suscriptores_palabra_dia() == []
+
+
+def test_suscribir_y_desuscribir_palabra_dia():
+    db = _db()
+    db.suscribir_palabra_dia(1)
+    assert db.esta_suscrito_palabra_dia(1) is True
+    assert db.listar_suscriptores_palabra_dia() == [1]
+
+    db.desuscribir_palabra_dia(1)
+    assert db.esta_suscrito_palabra_dia(1) is False
+    assert db.listar_suscriptores_palabra_dia() == []
+
+
+def test_suscribir_palabra_dia_es_idempotente():
+    db = _db()
+    db.suscribir_palabra_dia(1)
+    db.suscribir_palabra_dia(1)
+    assert db.listar_suscriptores_palabra_dia() == [1]

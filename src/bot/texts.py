@@ -101,6 +101,16 @@ PALABRA_DEL_DIA_INTRO = (
     "bien merece su atención:"
 )
 
+PALABRA_DIA_SUSCRITO = (
+    "🦉 Con sumo gusto. Cada mañana le llevaré, sin falta, una palabra de mis "
+    "anaqueles."
+)
+
+PALABRA_DIA_DESUSCRITO = (
+    "🦉 Como usted disponga. Ya no le enviaré la palabra del día -- pero sigo "
+    "aquí, si alguna vez la quiere pedir con /palabradeldia."
+)
+
 
 def intro_resultado() -> str:
     return random.choice(INTROS_RESULTADO)

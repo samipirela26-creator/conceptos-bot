@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from src.bot.commands import (
     menu_command, menu_callback, favoritos_command, historial_command, favorito_callback,
-    palabra_del_dia_command,
+    palabra_del_dia_command, suscribir_palabra_dia_command, cancelar_palabra_dia_command,
 )
 from src.bot import texts
 from src.db import DBClient
@@ -128,3 +128,55 @@ async def test_palabra_del_dia_command_sin_resultado():
     with patch("src.bot.commands.buscar_palabra_del_dia", return_value=None):
         await palabra_del_dia_command(update, MagicMock())
     update.message.reply_text.assert_awaited_once_with(texts.ERROR_SERVICIO)
+
+
+@pytest.mark.asyncio
+async def test_suscribir_palabra_dia_command():
+    db = DBClient(":memory:")
+    update = MagicMock()
+    update.effective_user.id = 1
+    update.message.reply_text = AsyncMock()
+    await suscribir_palabra_dia_command(update, _context_con_db(db))
+    assert db.esta_suscrito_palabra_dia(1) is True
+    update.message.reply_text.assert_awaited_once_with(texts.PALABRA_DIA_SUSCRITO)
+
+
+@pytest.mark.asyncio
+async def test_cancelar_palabra_dia_command():
+    db = DBClient(":memory:")
+    db.suscribir_palabra_dia(1)
+    update = MagicMock()
+    update.effective_user.id = 1
+    update.message.reply_text = AsyncMock()
+    await cancelar_palabra_dia_command(update, _context_con_db(db))
+    assert db.esta_suscrito_palabra_dia(1) is False
+    update.message.reply_text.assert_awaited_once_with(texts.PALABRA_DIA_DESUSCRITO)
+
+
+@pytest.mark.asyncio
+async def test_menu_callback_activa_palabra_dia():
+    db = DBClient(":memory:")
+    update = MagicMock()
+    update.effective_user.id = 1
+    update.callback_query.answer = AsyncMock()
+    update.callback_query.data = "francis_menu:palabradia_on"
+    update.callback_query.edit_message_reply_markup = AsyncMock()
+    update.callback_query.message.reply_text = AsyncMock()
+    await menu_callback(update, _context_con_db(db))
+    assert db.esta_suscrito_palabra_dia(1) is True
+    update.callback_query.message.reply_text.assert_awaited_once_with(texts.PALABRA_DIA_SUSCRITO)
+
+
+@pytest.mark.asyncio
+async def test_menu_callback_desactiva_palabra_dia():
+    db = DBClient(":memory:")
+    db.suscribir_palabra_dia(1)
+    update = MagicMock()
+    update.effective_user.id = 1
+    update.callback_query.answer = AsyncMock()
+    update.callback_query.data = "francis_menu:palabradia_off"
+    update.callback_query.edit_message_reply_markup = AsyncMock()
+    update.callback_query.message.reply_text = AsyncMock()
+    await menu_callback(update, _context_con_db(db))
+    assert db.esta_suscrito_palabra_dia(1) is False
+    update.callback_query.message.reply_text.assert_awaited_once_with(texts.PALABRA_DIA_DESUSCRITO)

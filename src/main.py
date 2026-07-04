@@ -16,7 +16,7 @@ from src.bot.formatters import formatear_resultado
 from src.bot.commands import (
     start_command, help_command, menu_command, menu_callback,
     favoritos_command, historial_command, favorito_callback,
-    palabra_del_dia_command,
+    palabra_del_dia_command, suscribir_palabra_dia_command, cancelar_palabra_dia_command,
 )
 from src.bot.handlers import handle_message, error_handler, inline_query_handler, buscar_palabra_del_dia
 
@@ -29,6 +29,8 @@ COMANDOS_PUBLICOS = [
     BotCommand("favoritos", "Ver sus palabras favoritas"),
     BotCommand("historial", "Ver sus últimas búsquedas"),
     BotCommand("palabradeldia", "Recibir una palabra del día"),
+    BotCommand("suscribirpalabradeldia", "Activar el envío diario de la palabra del día"),
+    BotCommand("cancelarpalabradeldia", "Desactivar el envío diario de la palabra del día"),
 ]
 
 
@@ -38,11 +40,15 @@ async def _post_init(application) -> None:
 
 
 async def enviar_palabra_del_dia(context) -> None:
-    """Job diario: le manda la palabra del día a cada usuario conocido (o a
-    los ALLOWED_USER_IDS fijos, si el bot los tiene configurados)."""
+    """Job diario: le manda la palabra del día a cada usuario suscrito
+    (opt-in, ver /suscribirpalabradeldia), filtrado por ALLOWED_USER_IDS si
+    el bot los tiene configurados."""
     db: DBClient = context.bot_data["db"]
     allowed_user_ids = context.bot_data.get("allowed_user_ids") or []
-    destinatarios = allowed_user_ids if allowed_user_ids else db.listar_usuarios()
+    suscriptores = db.listar_suscriptores_palabra_dia()
+    destinatarios = (
+        [uid for uid in suscriptores if uid in allowed_user_ids] if allowed_user_ids else suscriptores
+    )
     if not destinatarios:
         return
 
@@ -87,6 +93,8 @@ def main():
         application.add_handler(CommandHandler("favoritos", favoritos_command))
         application.add_handler(CommandHandler("historial", historial_command))
         application.add_handler(CommandHandler("palabradeldia", palabra_del_dia_command))
+        application.add_handler(CommandHandler("suscribirpalabradeldia", suscribir_palabra_dia_command))
+        application.add_handler(CommandHandler("cancelarpalabradeldia", cancelar_palabra_dia_command))
         application.add_handler(CallbackQueryHandler(menu_callback, pattern=r"^francis_menu:"))
         application.add_handler(CallbackQueryHandler(favorito_callback, pattern=r"^francis_fav:"))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))

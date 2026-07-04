@@ -12,9 +12,11 @@ RESULTADO_RAE_CASA = {
 
 
 @pytest.mark.asyncio
-async def test_enviar_palabra_del_dia_usa_allowed_user_ids_si_estan_configurados():
+async def test_enviar_palabra_del_dia_filtra_suscriptores_por_allowed_user_ids():
     db = DBClient(":memory:")
-    db.registrar_usuario(999)
+    db.suscribir_palabra_dia(1)
+    db.suscribir_palabra_dia(2)
+    db.suscribir_palabra_dia(999)  # suscrito, pero no está en allowed_user_ids
     context = MagicMock()
     context.bot_data = {"db": db, "allowed_user_ids": [1, 2]}
     context.bot.send_message = AsyncMock()
@@ -27,9 +29,9 @@ async def test_enviar_palabra_del_dia_usa_allowed_user_ids_si_estan_configurados
 
 
 @pytest.mark.asyncio
-async def test_enviar_palabra_del_dia_usa_usuarios_registrados_si_no_hay_allowed_ids():
+async def test_enviar_palabra_del_dia_usa_suscriptores_si_no_hay_allowed_ids():
     db = DBClient(":memory:")
-    db.registrar_usuario(42)
+    db.suscribir_palabra_dia(42)
     context = MagicMock()
     context.bot_data = {"db": db, "allowed_user_ids": []}
     context.bot.send_message = AsyncMock()
@@ -42,7 +44,7 @@ async def test_enviar_palabra_del_dia_usa_usuarios_registrados_si_no_hay_allowed
 
 
 @pytest.mark.asyncio
-async def test_enviar_palabra_del_dia_sin_destinatarios_no_busca_ni_envia():
+async def test_enviar_palabra_del_dia_sin_suscriptores_no_busca_ni_envia():
     db = DBClient(":memory:")
     context = MagicMock()
     context.bot_data = {"db": db, "allowed_user_ids": []}
@@ -58,6 +60,7 @@ async def test_enviar_palabra_del_dia_sin_destinatarios_no_busca_ni_envia():
 @pytest.mark.asyncio
 async def test_enviar_palabra_del_dia_nada_encontrado_no_envia():
     db = DBClient(":memory:")
+    db.suscribir_palabra_dia(1)
     context = MagicMock()
     context.bot_data = {"db": db, "allowed_user_ids": [1]}
     context.bot.send_message = AsyncMock()

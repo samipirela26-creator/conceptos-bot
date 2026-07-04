@@ -101,3 +101,20 @@
   - El `logger` global de src/main.py es None hasta que main() lo inicializa -- en tests que ejercitan enviar_palabra_del_dia() por la rama de "no se encontró ninguna palabra" (que llama a logger.warning), hay que parchear src.main.logger con un MagicMock, si no truena con AttributeError.
   - La tabla `usuarios` es la fuente de destinatarios cuando ALLOWED_USER_IDS está vacío (registro abierto) -- cualquier handler nuevo que reciba usuarios por primera vez (comandos, mensajes) debería llamar a db.registrar_usuario(user_id) igual que ya hacen start_command() y handle_message().
 ---
+
+## [2026-07-04 00:30] - US-008
+- El usuario pidió, después de ver US-007 terminado, que el envío diario automático de la palabra del día NO sea para todo el mundo por defecto, sino opt-in (el usuario debe activarlo explícitamente), con ambos mecanismos: comando de texto y botón en /menu.
+- Archivos cambiados:
+  - src/db.py: se ELIMINÓ la tabla `usuarios` y sus métodos registrar_usuario()/listar_usuarios() (quedaron sin ningún uso una vez que el broadcast pasó a ser opt-in). En su lugar, nueva tabla `suscriptores_palabra_dia` (user_id PRIMARY KEY, nadie suscrito por defecto) con métodos suscribir_palabra_dia, desuscribir_palabra_dia, esta_suscrito_palabra_dia, listar_suscriptores_palabra_dia.
+  - src/bot/texts.py: nuevos textos PALABRA_DIA_SUSCRITO y PALABRA_DIA_DESUSCRITO.
+  - src/bot/commands.py: nuevos suscribir_palabra_dia_command() y cancelar_palabra_dia_command() (comandos de texto); start_command() ya no llama a registrar_usuario() (ya no existe); _menu_keyboard() ahora recibe suscrito_palabra_dia: bool y agrega un botón que alterna entre "🔔 Activar" / "🔕 Desactivar" (callback_data "francis_menu:palabradia_on"/"palabradia_off"); menu_command() consulta db.esta_suscrito_palabra_dia() antes de construir el teclado; menu_callback() maneja las dos nuevas acciones (suscribe/desuscribe, refresca el teclado con edit_message_reply_markup, y confirma con un mensaje).
+  - src/bot/handlers.py: handle_message() ya no llama a db.registrar_usuario() (ya no existe esa tabla/método).
+  - src/main.py: enviar_palabra_del_dia() ahora arma destinatarios a partir de db.listar_suscriptores_palabra_dia(), filtrado por ALLOWED_USER_IDS si está configurado (intersección) en vez de usar allowed_user_ids directo o la vieja tabla usuarios; se registraron los dos nuevos CommandHandler y sus entradas en COMANDOS_PUBLICOS.
+  - tests/test_db.py, tests/test_commands.py, tests/test_main.py: actualizados/extendidos para la nueva tabla de suscriptores y el comportamiento opt-in (se quitaron las referencias a registrar_usuario/listar_usuarios).
+  - prd.json: agregada la historia US-008 (no estaba en el backlog original -- surgió como corrección del usuario sobre el comportamiento de US-007 ya implementado).
+- Verificación: `.venv/bin/python -m pytest -q` -> 59 passed. `python -c "import src.main"` para confirmar el arranque. Proceso en vivo reiniciado con el procedimiento seguro habitual.
+- **Learnings for future iterations:**
+  - CORRECCIÓN a la entrada de US-007 de arriba: la tabla `usuarios` mencionada ahí ya NO EXISTE -- fue reemplazada por completo por `suscriptores_palabra_dia`, que es opt-in (vacía por defecto) en vez de poblarse automáticamente en cada interacción.
+  - Cuando un dato deja de tener consumidores (como pasó con `usuarios` al volverse opt-in la palabra del día), conviene eliminarlo por completo en vez de dejarlo "por si acaso" -- se verificó con grep que no quedaran referencias sueltas antes de borrar la tabla y sus métodos.
+  - Patrón para features opt-in con toggle doble (comando + botón de menú): la función que construye el teclado (_menu_keyboard) recibe el estado actual como parámetro explícito en vez de consultarlo ella misma, así queda testeable sin mockear la DB; quien la llama (menu_command, menu_callback) es responsable de consultar el estado primero.
+---

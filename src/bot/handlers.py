@@ -63,8 +63,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     db = context.bot_data.get("db")
-    if db is not None:
-        db.registrar_usuario(update.effective_user.id)
 
     mensaje = update.message.text
     concepto = extraer_heuristico(mensaje)

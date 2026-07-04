@@ -51,6 +51,13 @@
       "title": "Palabra del día",
       "description": "Agregar un JobQueue diario (mirroring el patrón usado en asistente-bot) que elija una palabra interesante y la envíe automáticamente a los usuarios autorizados, más un comando manual /palabradeldia para pedirla en cualquier momento.",
       "passes": true
+    },
+    {
+      "id": "US-008",
+      "priority": 8,
+      "title": "Suscripción opt-in a la palabra del día",
+      "description": "El envío diario automático de la palabra del día (US-007) debe ser opt-in: por defecto ningún usuario la recibe. Agregar comandos /suscribirpalabradeldia y /cancelarpalabradeldia, y un botón en /menu que alterne el estado (activar/desactivar) según la suscripción actual del usuario. El comando manual /palabradeldia no se ve afectado -- sigue funcionando para cualquiera en cualquier momento.",
+      "passes": true
     }
   ]
 }
