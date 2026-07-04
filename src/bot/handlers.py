@@ -3,7 +3,7 @@ el usuario (heurística, y si hace falta, Gemini SOLO para esto) 2) consultar
 RAE + Wikcionario (fuentes reales, nunca generadas) 3) formatear y responder."""
 import logging
 
-from telegram import Update
+from telegram import InlineQueryResultArticle, InputTextMessageContent, Update
 from telegram.ext import ContextTypes
 
 from src.bot import texts
@@ -17,6 +17,28 @@ logger = logging.getLogger('conceptos-bot')
 
 def _acceso_permitido(user_id: int, allowed_user_ids: list[int]) -> bool:
     return not allowed_user_ids or user_id in allowed_user_ids
+
+
+def _buscar_concepto(concepto: str) -> tuple[dict | None, dict | None, bool]:
+    """Consulta RAE + Wikcionario para un concepto ya extraído. Devuelve
+    (resultado_rae, resultado_wikcionario, hubo_error_servicio)."""
+    resultado_rae = None
+    resultado_wikcionario = None
+    hubo_error_servicio = False
+
+    try:
+        resultado_rae = buscar_rae(concepto)
+    except RuntimeError as e:
+        logger.error(f"Error consultando RAE para '{concepto}': {e}")
+        hubo_error_servicio = True
+
+    try:
+        resultado_wikcionario = buscar_wikcionario(concepto)
+    except RuntimeError as e:
+        logger.error(f"Error consultando Wikcionario para '{concepto}': {e}")
+        hubo_error_servicio = True
+
+    return resultado_rae, resultado_wikcionario, hubo_error_servicio
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -41,21 +63,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     await update.message.reply_text(texts.trabajando())
 
-    resultado_rae = None
-    resultado_wikcionario = None
-    hubo_error_servicio = False
-
-    try:
-        resultado_rae = buscar_rae(concepto)
-    except RuntimeError as e:
-        logger.error(f"Error consultando RAE para '{concepto}': {e}")
-        hubo_error_servicio = True
-
-    try:
-        resultado_wikcionario = buscar_wikcionario(concepto)
-    except RuntimeError as e:
-        logger.error(f"Error consultando Wikcionario para '{concepto}': {e}")
-        hubo_error_servicio = True
+    resultado_rae, resultado_wikcionario, hubo_error_servicio = _buscar_concepto(concepto)
 
     if not resultado_rae and not resultado_wikcionario:
         if hubo_error_servicio:
@@ -66,6 +74,31 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     mensaje_final = formatear_resultado(concepto, resultado_rae, resultado_wikcionario)
     await update.message.reply_text(mensaje_final, parse_mode="Markdown")
+
+
+async def inline_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Permite consultar '@<bot> palabra' desde cualquier chat. No usa Gemini
+    (para responder rápido dentro del tiempo límite de una inline query de
+    Telegram) -- si la heurística no reconoce un patrón, se usa el texto tal
+    cual como concepto."""
+    consulta = (update.inline_query.query or "").strip()
+    if not consulta:
+        return
+
+    concepto = extraer_heuristico(consulta) or consulta
+    resultado_rae, resultado_wikcionario, hubo_error_servicio = _buscar_concepto(concepto)
+
+    if not resultado_rae and not resultado_wikcionario:
+        return
+
+    mensaje = formatear_resultado(concepto, resultado_rae, resultado_wikcionario)
+    resultado = InlineQueryResultArticle(
+        id=concepto,
+        title=f'Definición de "{concepto}"',
+        description="RAE + Wikcionario, servido por Francis la Búho 🦉",
+        input_message_content=InputTextMessageContent(mensaje, parse_mode="Markdown"),
+    )
+    await update.inline_query.answer([resultado], cache_time=300)
 
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:

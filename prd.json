@@ -29,7 +29,7 @@
       "priority": 4,
       "title": "Modo inline",
       "description": "Agregar un InlineQueryHandler en src/main.py que permita usar '@francislabuhobibliotecaria_bot palabra' desde cualquier chat de Telegram, reutilizando la misma lógica de búsqueda (RAE + Wikcionario) y formateo ya existente.",
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-005",

@@ -50,3 +50,16 @@
   - Patrón de callback_data: "francis_menu:<accion>" (namespace por bot, igual que "coco_menu:" en gastos-bot), para no chocar con otros CallbackQueryHandler que se agreguen más adelante (ej. futuros botones de favoritos tendrían su propio prefijo, como hace gastos-bot con coco_saldo/coco_cat/etc.).
   - Para testear handlers async de telegram sin conexión real: MagicMock() para Update/Context + AsyncMock() en los métodos que se awaitan (reply_text, answer, etc.), y @pytest.mark.asyncio en el test. Requiere pytest-asyncio instalado (ya en requirements-dev.txt).
 ---
+
+## [2026-07-03 23:55] - US-004
+- Implementado el modo inline: se puede escribir "@francislabuhobibliotecaria_bot palabra" desde cualquier chat de Telegram y Francis responde con un resultado inline (RAE + Wikcionario).
+- Archivos cambiados:
+  - src/bot/handlers.py: extraída _buscar_concepto(concepto) (helper compartido que antes estaba inline en handle_message, ahora reutilizado) y agregado inline_query_handler(update, context) que usa InlineQueryResultArticle + InputTextMessageContent.
+  - src/main.py: registrado InlineQueryHandler(inline_query_handler).
+  - tests/test_handlers.py (nuevo): tests con mocks de buscar_rae/buscar_wikcionario para query vacía, encontrada y no encontrada.
+- Verificación: `.venv/bin/python -m pytest -q` -> 28 passed. `python -c "import src.main"` para confirmar el arranque.
+- **Learnings for future iterations:**
+  - IMPORTANTE -- paso manual pendiente fuera de este código: el modo inline debe habilitarse una vez vía @BotFather con el comando /setinline (no existe endpoint de la Bot API para esto). Sin ese paso, Telegram no enviará las inline queries al bot aunque el InlineQueryHandler ya esté registrado y funcionando en el código.
+  - Por velocidad (las inline queries de Telegram tienen un límite de tiempo corto, ~10s), inline_query_handler NO usa Gemini -- solo extraer_heuristico(consulta), y si no matchea ningún patrón, usa la consulta tal cual como concepto. Esto es intencional y diferente del flujo normal de handle_message.
+  - _buscar_concepto() en src/bot/handlers.py es ahora el punto único para las llamadas a RAE/Wikcionario con manejo de errores -- si se agrega otra vía de entrada (ej. comando manual, palabra del día), reutilizar esta función en vez de duplicar los try/except.
+---

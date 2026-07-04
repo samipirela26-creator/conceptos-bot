@@ -1,13 +1,16 @@
 """Entry point del bot de Telegram 'Francis la Búho'."""
 import sys
 from telegram import BotCommand
-from telegram.ext import Application, CallbackQueryHandler, CommandHandler, MessageHandler, filters
+from telegram.ext import (
+    Application, CallbackQueryHandler, CommandHandler, InlineQueryHandler,
+    MessageHandler, filters,
+)
 
 from src.config import Config
 from src.utils.logger import setup_logger
 from src.llm.gemini_client import GeminiClient
 from src.bot.commands import start_command, help_command, menu_command, menu_callback
-from src.bot.handlers import handle_message, error_handler
+from src.bot.handlers import handle_message, error_handler, inline_query_handler
 
 logger = None
 
@@ -45,6 +48,7 @@ def main():
         application.add_handler(CommandHandler("menu", menu_command))
         application.add_handler(CallbackQueryHandler(menu_callback, pattern=r"^francis_menu:"))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+        application.add_handler(InlineQueryHandler(inline_query_handler))
         application.add_error_handler(error_handler)
 
         if config.allowed_user_ids:
