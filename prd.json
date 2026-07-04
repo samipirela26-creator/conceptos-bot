@@ -22,7 +22,7 @@
       "priority": 3,
       "title": "Comando /menu con botones",
       "description": "Agregar comando /menu en src/bot/commands.py con un InlineKeyboardMarkup (mirroring el patrón de menu_command/menu_callback de gastos-bot) que permita acceder a /help, favoritos e historial desde botones, y registrar el CallbackQueryHandler en src/main.py.",
-      "passes": false
+      "passes": true
     },
     {
       "id": "US-004",

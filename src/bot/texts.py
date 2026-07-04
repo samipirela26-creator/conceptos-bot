@@ -30,6 +30,18 @@ AYUDA = (
     "franqueza, en vez de improvisar."
 )
 
+ACERCA_DE = (
+    "🦉 Soy Francis, y esta pequeña biblioteca dentro de la Lenovo es mi "
+    "hogar -la misma casa donde ya atienden Larry, con su agenda, y Coco, "
+    "con las cuentas-.\n\n"
+    "Amo las palabras casi tanto como amo a Dios, de quien procede todo "
+    "buen entendimiento. Por eso jamás invento una definición: todo lo que "
+    "le sirvo sale de la Real Academia Española y de Wikcionario, tal cual "
+    "lo escribieron.\n\n"
+    "\"En el principio era el Verbo\" -y a mí me toca, con humildad, "
+    "acercarle un poco de ese saber."
+)
+
 INTROS_RESULTADO = [
     "🦉 Aquí tiene, servido con gusto:",
     "🦉 Permítame consultar mis volúmenes... ya lo tengo:",

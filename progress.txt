@@ -35,3 +35,18 @@
   - Wikcionario (_lista_acepciones también la usa para sus definiciones) nunca tendrá "ejemplos"/"sinonimos" -- por eso _lista_acepciones usa item.get(...) or [] en vez de asumir que existen esas claves.
   - El límite de sinónimos mostrados es _MAX_SINONIMOS_MOSTRADOS = 5 en formatters.py, para no saturar el mensaje cuando la RAE trae listas largas (ej. "casa" trae 12 sinónimos en su primera acepción).
 ---
+
+## [2026-07-03 23:50] - US-003
+- Implementado el comando /menu con teclado inline, siguiendo el patrón menu_command/menu_callback de gastos-bot (Coco).
+- Archivos cambiados:
+  - src/bot/texts.py: nuevo texto ACERCA_DE (blurb de Francis, con su toque cristocéntrico).
+  - src/bot/commands.py: nueva _menu_keyboard() (InlineKeyboardMarkup), menu_command() y menu_callback() (namespace de callback_data "francis_menu:...").
+  - src/main.py: registrado CommandHandler("menu", menu_command), CallbackQueryHandler(menu_callback, pattern=r"^francis_menu:"), y "menu" agregado a COMANDOS_PUBLICOS (BotCommand) para que aparezca en el menú ☰ de Telegram.
+  - tests/test_commands.py (nuevo): tests con AsyncMock/MagicMock para menu_command y menu_callback.
+  - requirements-dev.txt: agregado pytest-asyncio==0.24.0 (necesario para @pytest.mark.asyncio; antes no había tests async en este proyecto).
+- Verificación: `.venv/bin/python -m pytest -q` -> 25 passed. `python -c "import src.main"` para confirmar que los nuevos imports/registro de handlers no rompen el arranque.
+- **Learnings for future iterations:**
+  - El menú por ahora solo tiene botones "Cómo consultarme" (ayuda) y "Acerca de Francis" -- NO se agregaron botones de favoritos/historial porque esas features (US-005/US-006) todavía no existen. Cuando se implementen, agregar sus botones a _menu_keyboard() en src/bot/commands.py y sus ramas correspondientes en menu_callback().
+  - Patrón de callback_data: "francis_menu:<accion>" (namespace por bot, igual que "coco_menu:" en gastos-bot), para no chocar con otros CallbackQueryHandler que se agreguen más adelante (ej. futuros botones de favoritos tendrían su propio prefijo, como hace gastos-bot con coco_saldo/coco_cat/etc.).
+  - Para testear handlers async de telegram sin conexión real: MagicMock() para Update/Context + AsyncMock() en los métodos que se awaitan (reply_text, answer, etc.), y @pytest.mark.asyncio en el test. Requiere pytest-asyncio instalado (ya en requirements-dev.txt).
+---
