@@ -18,6 +18,7 @@ from src.bot.commands import (
     favoritos_command, historial_command, favorito_callback,
     palabra_del_dia_command, suscribir_palabra_dia_command, cancelar_palabra_dia_command,
     ahorcado_command, ahorcado_callback,
+    juegos_command, juegos_callback,
 )
 from src.bot.handlers import handle_message, error_handler, inline_query_handler, buscar_palabra_del_dia
 
@@ -33,6 +34,7 @@ COMANDOS_PUBLICOS = [
     BotCommand("suscribirpalabradeldia", "Activar el envío diario de la palabra del día"),
     BotCommand("cancelarpalabradeldia", "Desactivar el envío diario de la palabra del día"),
     BotCommand("ahorcado", "Jugar al ahorcado"),
+    BotCommand("juegos", "Jugar juegos de conversación con amigos"),
 ]
 
 
@@ -98,9 +100,11 @@ def main():
         application.add_handler(CommandHandler("suscribirpalabradeldia", suscribir_palabra_dia_command))
         application.add_handler(CommandHandler("cancelarpalabradeldia", cancelar_palabra_dia_command))
         application.add_handler(CommandHandler("ahorcado", ahorcado_command))
+        application.add_handler(CommandHandler("juegos", juegos_command))
         application.add_handler(CallbackQueryHandler(menu_callback, pattern=r"^francis_menu:"))
         application.add_handler(CallbackQueryHandler(favorito_callback, pattern=r"^francis_fav:"))
         application.add_handler(CallbackQueryHandler(ahorcado_callback, pattern=r"^francis_ahorcado:"))
+        application.add_handler(CallbackQueryHandler(juegos_callback, pattern=r"^francis_juegos:"))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
         application.add_handler(InlineQueryHandler(inline_query_handler))
         application.add_error_handler(error_handler)

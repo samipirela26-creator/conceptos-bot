@@ -152,6 +152,36 @@ AHORCADO_SIN_JUEGO = (
 
 AHORCADO_RENDIRSE = "🦉 Como guste. La palabra era \"{palabra}\". Cuando quiera, jugamos de nuevo."
 
+JUEGOS_INTRO = (
+    "🦉 Cien juegos para conversar tengo en mis anaqueles, ordenados por "
+    "categoría. Elija una para empezar:"
+)
+
+JUEGOS_SIN_JUEGO = (
+    "🦉 No hay ningún juego en curso. Escriba /juegos para elegir uno."
+)
+
+JUEGOS_CATEGORIA_VACIA = "🦉 Vaya, esa categoría parece estar vacía por ahora."
+
+JUEGOS_FIN = [
+    "🦉 Y con esa, agotamos las consignas de este juego. ¿Probamos otro? Escriba /juegos.",
+    "🦉 Ahí se terminaron las rondas de este juego. Ha sido un placer -- /juegos para elegir otro.",
+    "🦉 Eso es todo lo que tenía guardado para este juego. Cuando quiera, elegimos otro con /juegos.",
+]
+
+JUEGOS_SALIDA = [
+    "🦉 Como guste. Dejamos \"{titulo}\" por aquí -- cuando quiera, volvemos con /juegos.",
+    "🦉 Entendido, cerramos \"{titulo}\" por ahora. Escriba /juegos si quiere otra ronda.",
+]
+
+
+def juegos_fin() -> str:
+    return random.choice(JUEGOS_FIN)
+
+
+def juegos_salida(titulo: str) -> str:
+    return random.choice(JUEGOS_SALIDA).format(titulo=titulo)
+
 
 def intro_resultado() -> str:
     return random.choice(INTROS_RESULTADO)

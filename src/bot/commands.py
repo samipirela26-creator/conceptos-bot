@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ContextTypes
 
-from src.bot import ahorcado, texts
+from src.bot import ahorcado, juegos, texts
 from src.bot.formatters import formatear_resultado
 from src.bot.handlers import buscar_palabra_del_dia, obtener_pista
 
@@ -169,4 +169,40 @@ async def ahorcado_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         await query.message.reply_text(pista or texts.AHORCADO_SIN_PISTA)
     elif accion == "rendirse":
         mensaje = ahorcado.rendirse(context.user_data)
+        await query.edit_message_text(mensaje)
+
+
+async def juegos_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    await update.message.reply_text(texts.JUEGOS_INTRO, reply_markup=juegos.teclado_categorias())
+
+
+async def juegos_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    await query.answer()
+    partes = (query.data or "").split(":", 2)
+    accion = partes[1] if len(partes) > 1 else ""
+
+    if accion == "categorias":
+        await query.edit_message_text(texts.JUEGOS_INTRO, reply_markup=juegos.teclado_categorias())
+    elif accion == "cat":
+        categoria_id = partes[2]
+        nombre = juegos.nombre_categoria(categoria_id)
+        teclado = juegos.teclado_juegos_de_categoria(categoria_id)
+        if nombre is None or teclado is None:
+            await query.edit_message_text(texts.JUEGOS_CATEGORIA_VACIA, reply_markup=juegos.teclado_categorias())
+            return
+        await query.edit_message_text(f"🦉 {nombre}\n\nElija un juego:", reply_markup=teclado)
+    elif accion == "juego":
+        juego_id = partes[2]
+        resultado = juegos.iniciar_juego(context.user_data, juego_id)
+        if resultado is None:
+            await query.edit_message_text(texts.JUEGOS_CATEGORIA_VACIA, reply_markup=juegos.teclado_categorias())
+            return
+        mensaje, teclado = resultado
+        await query.edit_message_text(mensaje, reply_markup=teclado)
+    elif accion == "siguiente":
+        mensaje, teclado, _ = juegos.siguiente_prompt(context.user_data)
+        await query.edit_message_text(mensaje, reply_markup=teclado)
+    elif accion == "salir":
+        mensaje = juegos.salir_juego(context.user_data)
         await query.edit_message_text(mensaje)
