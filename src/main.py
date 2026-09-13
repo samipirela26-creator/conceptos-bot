@@ -130,7 +130,7 @@ def main():
 
         logger.info("Bot iniciado exitosamente. Escuchando mensajes...")
         application.run_polling(
-            poll_interval=2.0,
+            poll_interval=0.0,  # long polling ya espera en el servidor de Telegram; dormir aqui solo suma latencia
             timeout=30,
             drop_pending_updates=False,
             bootstrap_retries=-1,
